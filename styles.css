@@ -1,0 +1,427 @@
+/* Estilos generales */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #2f2d2d; /* Fondo más claro pero manteniendo el contraste */
+    color: white;
+    text-align: center;
+}
+
+/* Barra de navegación */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #292929; /* Un poco más claro */
+    padding: 15px 40px; /* Reducido el padding */
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.logo img {
+    width: 80px;
+    margin-right: 15px;
+}
+
+/* Menú de navegación */
+.menu {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.menu li a:hover {
+    color: #ff7f50; /* Resalta en naranja */
+}
+
+/* Sección principal */
+.hero {
+    background: url('https://source.unsplash.com/1600x900/?locker,security') no-repeat center center/cover;
+    color: white;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    background-blend-mode: multiply; /* Oscurece la imagen */
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hero h1 {
+    font-size: 50px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.hero p {
+    font-size: 22px;
+    margin: 5px 0;
+}
+
+/* Botón llamativo */
+.btn {
+    display: inline-block;
+    background: #ff7f50;
+    color: white;
+    padding: 14px 28px;
+    font-size: 22px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 5px 15px rgba(255, 127, 80, 0.4);
+}
+
+.btn:hover {
+    background: #ff5722;
+    transform: scale(1.05);
+}
+
+/* Sección de características */
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Reducida la separación */
+    padding: 40px 20px; /* Menos espacio */
+    margin-top: -200px; /* Movido hacia arriba */
+}
+
+.feature {
+    background: rgba(255, 255, 255, 0.15); /* Ligero cambio para más visibilidad */
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    max-width: 280px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+}
+
+.feature img {
+    width: 90px;
+    margin-bottom: 10px;
+}
+
+.feature h2 {
+    font-size: 24px;
+}
+
+.feature p {
+    font-size: 18px;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Estilos generales para el pie de página */
+footer {
+    background-color: #1e1e1e; /* Un poco más oscuro que el fondo principal */
+    color: #ffffff;
+    text-align: center;
+    padding: 20px 15px;
+    font-size: 14px;
+    margin-top: 30px;
+    border-top: 2px solid #ff7f50; /* Línea de color naranja para destacar */
+}
+
+/* Estilos para los párrafos dentro del footer */
+footer p {
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+/* Estilo para los enlaces dentro del footer */
+footer a {
+    color: #ff7f50; /* Naranja para resaltar los enlaces */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: #ff5722; /* Un tono más oscuro al pasar el mouse */
+}
+
+/* Redes sociales */
+.social-links {
+    margin-top: 10px;
+}
+
+/* Contenedor de los íconos de redes sociales */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.social-icons img {
+    width: 30px;
+    height: 30px;
+    filter: invert(1); /* Hace que los íconos sean blancos */
+    transition: transform 0.3s ease;
+}
+
+.social-icons img:hover {
+    transform: scale(1.2);
+}
+
+
+
+/* Efecto página de inicio de sesión */
+
+/* Asegurar que solo afecte la página de inicio de sesión */
+.login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Aumentado de 50vh a 100vh para mejor centrado */
+    background-color: #2f2d2d;
+    color: white;
+    margin: 0;
+}
+
+/* Contenedor del formulario más grande */
+.login-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 50px; /* Aumentado de 30px a 50px para más espacio interno */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 450px; /* Aumentado de 350px a 450px */
+}
+
+/* Título más grande */
+.login-container h2 {
+    margin-bottom: 25px;
+    font-size: 28px; /* Aumentado de 24px a 28px */
+}
+
+/* Inputs y grupos más grandes */
+.login-input-group {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px; /* Aumentado de 10px a 15px */
+    border-radius: 10px;
+    margin-bottom: 20px; /* Más separación */
+}
+
+.login-input-group img {
+    width: 30px; /* Aumentado de 25px a 30px */
+    margin-right: 12px;
+}
+
+.login-input-group input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 20px; /* Aumentado de 16px a 20px */
+    padding: 12px;
+}
+
+/* Botón de inicio de sesión más grande */
+.login-btn {
+    background: #ff7f50;
+    color: white;
+    padding: 16px; /* Aumentado de 12px a 16px */
+    border: none;
+    border-radius: 10px;
+    font-size: 22px; /* Aumentado de 18px a 22px */
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+    background: #ff5722;
+}
+
+/* Ajuste para el enlace de registro */
+.login-container p {
+    margin-top: 15px;
+    font-size: 18px; /* Aumentado el tamaño de fuente */
+}
+
+.login-container a {
+    color: #ff7f50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Estilos generales */
+.body_register {
+    font-family: 'Poppins', sans-serif;
+    background-color: #1e1e1e;  /* Fondo oscuro */
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor del formulario */
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.register-container {
+    background-color: #2a2a2a; /* Fondo del formulario */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+    width: 50%;
+    max-width: 500px;
+}
+
+/* Título */
+.register-container h2 {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Formulario */
+.register-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Inputs y select */
+.register-input-group {
+    position: relative;
+    padding: 7px;
+}
+
+.register-input-group input,
+.register-input-group select {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #3a3a3a; /* Color de fondo */
+    color: #fff; /* Texto en blanco */
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+/* Mejora de contraste en los placeholders */
+.register-input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.6); /* Color más claro */
+}
+
+/* Mejora en el select */
+.register-input-group select {
+    appearance: none;
+    cursor: pointer;
+}
+
+/* Mejora visual de las opciones del select */
+.register-input-group select option {
+    background-color: #2a2a2a;
+    color: #fff;
+    font-size: 16px;
+}
+
+/* Ajuste para el campo de jornada */
+.full-width {
+    grid-column: span 2;
+}
+
+/* Botón de registro */
+.register-btn {
+    grid-column: span 2;
+    padding: 12px;
+    background-color: #ff7b00; /* Color llamativo */
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.register-btn:hover {
+    background-color: #e66b00; /* Efecto hover */
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .register-form {
+        grid-template-columns: 1fr;
+    }
+    .full-width {
+        grid-column: span 1;
+    }
+}
+
+

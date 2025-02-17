@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión - Administrador</title>
+    <link rel="stylesheet" href="stylos.css">
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header>
+        <div class="logo">
+            <img src="/Imagenes/img.png" alt="Logo Sena (Distrito Capital)" width="100">
+        </div>
+        <h1>Reserva de Casilleros</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="#">Información</a></li>
+                <li><a href="#">FAQ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Formulario de inicio de sesión -->
+    <main>
+        <section class="login-container">
+            <h2>Iniciar Sesión - Administrador</h2>
+            <form action="login_admin.php" method="POST">
+                <div class="input-group">
+                    <label for="correo">Correo Institucional:</label>
+                    <input type="email" id="correo" name="correo" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="contraseña">Contraseña:</label>
+                    <input type="password" id="contraseña" name="contraseña" required>
+                </div>
+
+                <button type="submit" class="button">Iniciar sesión</button>
+            </form>
+            <p class="parrafol">¿No tienes cuenta?</p> <a href="registro_admin.html">Regístrate aquí</a>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica Cenigraf - Regional Distrito Capital.</p>
+        <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
+        <p>Atención telefónica: lunes a viernes 7:00 a
