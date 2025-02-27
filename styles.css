@@ -522,3 +522,25 @@ button:hover {
     background-color: #0056b3;
 }
 
+.gift{
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 50px;
+}
+.gift img {
+    width: 60%;
+    height: auto;
+    border-radius: 10%;
+    opacity: 0.9;
+}
+
+
+
+
+
+
+/*pagina de privacidad*/
+.container-p{
+    text-align: center;
+}
