@@ -32,14 +32,14 @@
     <!-- Contenedor de inicio de sesión -->
     <div class="login-page" class="login-container">
         <h2>Iniciar Sesión</h2>
-        <form id="registroForm">
+        <form action="login.php" method="POST">
             <div class="login-input-group">
                 <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Usuario">
-                <input type="text" placeholder="Usuario@soy.sena.edu.co" required>
+                <input type="email" name="email" placeholder="Usuario@soy.sena.edu.co" required>
             </div>
             <div class="login-input-group">
                 <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" alt="Contraseña">
-                <input type="password" placeholder="Contraseña" required>
+                <input type="password" name="contraseña" placeholder="Contraseña" required>
             </div>
             <button type="submit" class="login-btn">Ingresar</button>
         </form>
