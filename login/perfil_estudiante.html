@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil del Estudiante</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../Imagenes/image-removebg-preview.png" alt="Lock&Go">
+            <span class="logo-text">Lock&Go</span>
+        </div>
+        <ul class="menu">
+            <li><a href="../Pagina index/index.html">Inicio</a></li>
+            <li><a href="../Pagina Reserva/bienvenida.html">Casilleros</a></li>
+            <li><a href="../contactenos/contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <section class="perfil-container">
+        <h2>Perfil del Estudiante</h2>
+        <div id="perfil-info">
+            <?php
+            session_start();
+            include '../conexion.php';
+
+            if (!isset($_SESSION['usuario_id'])) {
+                echo "<p>No has iniciado sesión.</p>";
+                exit();
+            }
+
+            $usuario_id = $_SESSION['usuario_id'];
+            $sql = "SELECT * FROM usuarios WHERE id = '$usuario_id'";
+            $resultado = $conn->query($sql);
+
+            if ($resultado->num_rows > 0) {
+                $usuario = $resultado->fetch_assoc();
+                echo "<p><strong>Nombre:</strong> " . $usuario['nombre'] . " " . $usuario['apellido'] . "</p>";
+                echo "<p><strong>Teléfono:</strong> " . $usuario['telefono'] . "</p>";
+                echo "<p><strong>Identificación:</strong> " . $usuario['identificacion'] . "</p>";
+                echo "<p><strong>Ficha:</strong> " . $usuario['ficha'] . "</p>";
+                echo "<p><strong>Email:</strong> " . $usuario['email'] . "</p>";
+                echo "<p><strong>Jornada:</strong> " . $usuario['jornada'] . "</p>";
+            } else {
+                echo "<p>No se encontró información del usuario.</p>";
+            }
+            $conn->close();
+            ?>
+        </div>
+    </section>
+    
+    <footer>
+        <p>&copy; Servicio Nacional de Aprendizaje SENA - CENIGRAF</p>
+    </footer>
+</body>
+</html>

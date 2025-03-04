@@ -546,3 +546,42 @@ button:hover {
 .container-p{
     text-align: center;
 }
+
+
+
+
+/*estilos perfil*/
+
+.perfil-container {
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+.perfil-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 2px solid white;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #ff9800;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #e68900;
+}
