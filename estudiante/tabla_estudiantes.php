@@ -1,3 +1,50 @@
+<?php
+include "../conexion/db.php"; // Conexión a la base de datos
+
+// Eliminar estudiante si se solicita
+if (isset($_GET['eliminar'])) {
+    $id = $_GET['eliminar'];
+    $sql = "DELETE FROM estudiantes WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    
+    if ($stmt->execute()) {
+        echo "<script>alert('Estudiante eliminado correctamente'); window.location.href = 'tabla_estudiantes.php';</script>";
+        exit();
+    } else {
+        echo "<script>alert('Error al eliminar el estudiante.');</script>";
+    }
+}
+
+// Editar estudiante si se envía el formulario
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar'])) {
+    $id = $_POST["id"];
+    $nombre = $_POST["nombre"];
+    $apellidos = $_POST["apellidos"];
+    $celular = $_POST["celular"];
+    $identificacion = $_POST["identificacion"];
+    $ficha = $_POST["ficha"];
+    $email = $_POST["email"];
+    $jornada = $_POST["jornada"];
+    $programa_formacion = $_POST["programa_formacion"];
+
+    $sql = "UPDATE estudiantes SET nombre=?, apellidos=?, celular=?, identificacion=?, ficha=?, email=?, jornada=?, programa_formacion=? WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssssi", $nombre, $apellidos, $celular, $identificacion, $ficha, $email, $jornada, $programa_formacion, $id);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Datos actualizados correctamente'); window.location.href = 'tabla_estudiantes.php';</script>";
+        exit();
+    } else {
+        echo "<script>alert('Error al actualizar los datos.');</script>";
+    }
+}
+
+// Obtener la lista de estudiantes
+$sql = "SELECT id, nombre, apellidos, celular, identificacion, ficha, email, jornada, programa_formacion FROM estudiantes";
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,47 +52,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lock&Go - Gestión de Estudiantes</title>
     <link rel="stylesheet" href="../styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="../Imagenes/image-removebg-preview.png">
-    <script>
-        function abrirModal(id, nombre, apellidos, telefono, identificacion, ficha, email, jornada, programa) {
-            document.getElementById("id").value = id;
-            document.getElementById("nombre").value = nombre;
-            document.getElementById("apellidos").value = apellidos;
-            document.getElementById("telefono").value = telefono;
-            document.getElementById("identificacion").value = identificacion;
-            document.getElementById("ficha").value = ficha;
-            document.getElementById("email").value = email;
-            document.getElementById("jornada").value = jornada;
-            document.getElementById("programa").value = programa;
-            document.getElementById("modal").style.display = "block";
-        }
-        function cerrarModal() {
-            document.getElementById("modal").style.display = "none";
-        }
-    </script>
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-        }
-    </style>
 </head>
 <body>
     <h2>Lista de Estudiantes</h2>
@@ -53,7 +59,12 @@
         <tr>
             <th>Nombre</th>
             <th>Apellidos</th>
-            <th>Teléfono</th>
+            <th>Celular</th>
+            <th>Identificación</th>
+            <th>Ficha</th>
+            <th>Email</th>
+            <th>Jornada</th>
+            <th>Programa de Formación</th>
             <th>Acciones</th>
         </tr>
         <?php while ($row = $result->fetch_assoc()) { ?>
@@ -61,29 +72,54 @@
             <td><?php echo $row["nombre"]; ?></td>
             <td><?php echo $row["apellidos"]; ?></td>
             <td><?php echo $row["celular"]; ?></td>
+            <td><?php echo $row["identificacion"]; ?></td>
+            <td><?php echo $row["ficha"]; ?></td>
+            <td><?php echo $row["email"]; ?></td>
+            <td><?php echo $row["jornada"]; ?></td>
+            <td><?php echo $row["programa_formacion"]; ?></td>
             <td>
-                <a href="#" onclick="abrirModal('<?php echo $row['id']; ?>', '<?php echo $row['nombre']; ?>', '<?php echo $row['apellidos']; ?>', '<?php echo $row['celular']; ?>', '<?php echo $row['identificacion']; ?>', '<?php echo $row['ficha']; ?>', '<?php echo $row['email']; ?>', '<?php echo $row['jornada']; ?>', '<?php echo $row['programa_formacion']; ?>')">✏ Editar</a>
+                <a href="?editar=<?php echo $row['id']; ?>">✏ Editar</a>
+                <a href="?eliminar=<?php echo $row['id']; ?>" onclick="return confirm('¿Seguro que deseas eliminar este estudiante?')">❌ Eliminar</a>
             </td>
         </tr>
         <?php } ?>
     </table>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <h2>Editar Estudiante</h2>
-            <form method="POST">
-                <input type="hidden" id="id" name="id">
-                <label>Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required><br>
-                <label>Apellidos:</label>
-                <input type="text" id="apellidos" name="apellidos" required><br>
-                <label>Teléfono:</label>
-                <input type="text" id="telefono" name="telefono" required><br>
-                <button type="submit" name="editar">Actualizar</button>
-                <button type="button" onclick="cerrarModal()">Cerrar</button>
-            </form>
-        </div>
-    </div>
+    <?php if (isset($_GET['editar'])) {
+        $id = $_GET['editar'];
+        $sql = "SELECT * FROM estudiantes WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $estudiante = $resultado->fetch_assoc();
+    ?>
+    <h2>Editar Estudiante</h2>
+    <form method="POST">
+        <input type="hidden" name="id" value="<?php echo $estudiante['id']; ?>">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" value="<?php echo $estudiante['nombre']; ?>" required><br>
+        <label>Apellidos:</label>
+        <input type="text" name="apellidos" value="<?php echo $estudiante['apellidos']; ?>" required><br>
+        <label>Celular:</label>
+        <input type="text" name="celular" value="<?php echo $estudiante['celular']; ?>" required><br>
+        <label>Identificación:</label>
+        <input type="text" name="identificacion" value="<?php echo $estudiante['identificacion']; ?>" required><br>
+        <label>Ficha:</label>
+        <input type="text" name="ficha" value="<?php echo $estudiante['ficha']; ?>" required><br>
+        <label>Email:</label>
+        <input type="email" name="email" value="<?php echo $estudiante['email']; ?>" required><br>
+        <label>Jornada:</label>
+        <select name="jornada" required>
+            <option value="Mañana" <?php if ($estudiante['jornada'] == 'Mañana') echo 'selected'; ?>>Mañana</option>
+            <option value="Tarde" <?php if ($estudiante['jornada'] == 'Tarde') echo 'selected'; ?>>Tarde</option>
+            <option value="Noche" <?php if ($estudiante['jornada'] == 'Noche') echo 'selected'; ?>>Noche</option>
+        </select><br>
+        <label>Programa de Formación:</label>
+        <input type="text" name="programa_formacion" value="<?php echo $estudiante['programa_formacion']; ?>" required><br>
+        <button type="submit" name="editar">Actualizar</button>
+    </form>
+    <?php } ?>
 </body>
 </html>
-
+<?php $conn->close(); ?>
