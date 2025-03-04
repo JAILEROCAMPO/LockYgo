@@ -33,42 +33,64 @@
             <h2>Registro de Usuario</h2>
             
             
-            <form action="registro.php" method="POST">
-                <input type="hidden" name="tipo_usuario" value="estudiante">
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
-        
-                <label for="apellido">Apellidos:</label>
-                <input type="text" id="apellido" name="apellido" required>
-        
-                <label for="telefono">Teléfono:</label>
-                <input type="tel" id="telefono" name="telefono" required>
-        
-                <label for="identificacion">Identificación:</label>
-                <input type="text" id="identificacion" name="identificacion" required>
-        
-                <label for="ficha">Ficha:</label>
-                <input type="text" id="ficha" name="ficha" required>
-        
-                <label for="email">Correo Electrónico:</label>
-                <input type="email" id="email" name="email" required>
-        
-                <label for="jornada">Jornada:</label>
-                <select id="jornada" name="jornada" required>
-                    <option value="mañana">Mañana</option>
-                    <option value="tarde">Tarde</option>
-                    <option value="noche">Noche</option>
-                </select>
-        
-                <label for="programa">Programa de Formación:</label>
-                <input type="text" id="programa" name="programa" required>
-        
-                <label for="contraseña">Contraseña:</label>
-                <input type="password" id="contraseña" name="contraseña" required>
-        
-                <button type="submit">Registrarse</button>
+            <form action="registro.php" method="POST" class="register-form">
+                <input type="hidden" name="tipo_usuario" value="estudiante" class="">
+            
+                <div class="register-input-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+            
+                <div class="register-input-group">
+                    <label for="apellido">Apellidos:</label>
+                    <input type="text" id="apellido" name="apellido" required>
+                </div>
+            
+                <div class="register-input-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="tel" id="telefono" name="telefono" required>
+                </div>
+            
+                <div class="register-input-group">
+                    <label for="identificacion">Identificación:</label>
+                    <input type="text" id="identificacion" name="identificacion" required>
+                </div>
+            
+                <div class="register-input-group">
+                    <label for="ficha">Ficha:</label>
+                    <input type="text" id="ficha" name="ficha" required>
+                </div>
+            
+                <div class="register-input-group">
+                    <label for="email">Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+            
+                <div class="register-input-group">
+                    <label for="jornada">Jornada:</label>
+                    <select id="jornada" name="jornada" required>
+                        <option value="mañana">Mañana</option>
+                        <option value="tarde">Tarde</option>
+                        <option value="noche">Noche</option>
+                    </select>
+                </div>
+            
+                <div class="register-input-group">
+                    <label for="programa">Programa de Formación:</label>
+                    <input type="text" id="programa" name="programa" required>
+                </div>
+            
+                <div class="register-input-group">
+                    <label for="contraseña">Contraseña:</label>
+                    <input type="password" id="contraseña" name="contraseña" required>
+                </div>
+                <div class="register-input-group">
+                        <label for="contraseña">Confirmar contraseña:</label>
+                        <input type="password" id="contraseña" name="contraseña" required>
+                    </div>
+                <button type="submit" class="register-btn">Registrarse</button>
             </form>
-
+            
 
         </div>
     </div>
