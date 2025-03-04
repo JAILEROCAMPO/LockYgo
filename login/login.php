@@ -1,39 +1,49 @@
 <?php
-include "../conexion/db.php";
+session_start();
+include "../conexion/db.php"; // Conexión a la base de datos
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
-    $contraseña = $_POST["contraseña"];
+    $password = $_POST["contraseña"];
 
-    // Verificar si el usuario es un administrador
-    $sql_admin = "SELECT * FROM administrador WHERE email = '$email' AND contrasenaadmin = '$contraseña'";
-    $result_admin = $conn->query($sql_admin);
+    // Buscar en la tabla de administradores
+    $sql_admin = "SELECT id, nombre, contrasena FROM administradores WHERE email = ?";
+    $stmt = $conn->prepare($sql_admin);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
 
-    if ($result_admin->num_rows > 0) {
-        echo "<script>
-                alert('Login exitoso como Administrador');
-                window.location.href = '../admin/index_admin.html';
-              </script>";
-        exit();
+    if ($resultado->num_rows > 0) {
+        $admin = $resultado->fetch_assoc();
+        if (password_verify($password, $admin['contrasena'])) {
+            $_SESSION["usuario"] = $admin["nombre"];
+            $_SESSION["rol"] = "admin";
+            header("Location: ../admin/index_admin.html");
+            exit();
+        }
     }
 
-    // Verificar si el usuario es un usuario normal
-    $sql_user = "SELECT * FROM usuarios WHERE email = '$email' AND contraseña = '$contraseña'";
-    $result_user = $conn->query($sql_user);
+    // Buscar en la tabla de estudiantes
+    $sql_estudiante = "SELECT id, nombre, contrasena FROM estudiantes WHERE email = ?";
+    $stmt = $conn->prepare($sql_estudiante);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
 
-    if ($result_user->num_rows > 0) {
-        echo "<script>
-                alert('Login exitoso');
-                window.location.href = '../usuario/index_usuario.html';
-              </script>";
-        exit();
-    } else {
-        echo "<script>
-                alert('Credenciales incorrectas');
-                window.history.back();
-              </script>";
+    if ($resultado->num_rows > 0) {
+        $estudiante = $resultado->fetch_assoc();
+        if (password_verify($password, $estudiante['contrasena'])) {
+            $_SESSION["usuario"] = $estudiante["nombre"];
+            $_SESSION["rol"] = "estudiante";
+            header("Location: ../estudiante/index_estudiante.html");
+            exit();
+        }
     }
 
-    $conn->close();
+    // Si no coincide con ningún usuario
+    echo "<script>alert('Credenciales incorrectas'); window.history.back();</script>";
 }
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 ?>
