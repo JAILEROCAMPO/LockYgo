@@ -1,47 +1,57 @@
 <?php
-include "../conexion/db.php"; // Asegúrate de que este archivo se conecta correctamente
+include "../conexion/db.php"; // Asegúrate de que este archivo establece la conexión correctamente
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST["nombre"];
     $apellidos = $_POST["apellido"];
     $telefono = $_POST["telefono"];
     $identificacion = $_POST["identificacion"];
-    $ficha = $_POST["ficha"];
     $email = $_POST["email"];
-    $jornada = $_POST["jornada"];
-    $programa_formacion = $_POST["programa"];
     $contrasena = password_hash($_POST["contraseña"], PASSWORD_DEFAULT);
+    $tipo_usuario = $_POST["tipo_usuario"]; // 'estudiante' o 'admin'
 
-    // Preparamos la consulta segura
-    $sql = "INSERT INTO estudiantes (nombre, apellidos, celular, identificacion, ficha, email, jornada, contrasena, programa_formacion) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // Si es un estudiante, se requieren estos campos adicionales
+    $ficha = $_POST["ficha"] ?? null;
+    $jornada = $_POST["jornada"] ?? null;
+    $programa_formacion = $_POST["programa"] ?? null;
 
-    if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("sssssssss", $nombre, $apellidos, $telefono, $identificacion, $ficha, $email, $jornada, $contrasena, $programa_formacion);
+    // Determinar a qué tabla insertar
+    if ($tipo_usuario === "estudiante") {
+        $sql = "INSERT INTO estudiantes (nombre, apellidos, celular, identificacion, ficha, email, jornada, contrasena, programa_formacion) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        // 🔍 Imprimir consulta antes de ejecutar (para depuración)
-        echo "Consulta preparada: " . $sql . "<br>";
-
-        if ($stmt->execute()) {
-            echo "<script>
-                    alert('Usuario registrado con éxito');
-                    window.location.href = '../login/inicioSesion_usuario.html';
-                  </script>";
-        } else {
-            echo "<script>
-                    alert('Error al registrar usuario: " . $stmt->error . "');
-                    window.history.back();
-                  </script>";
+        if ($stmt = $conn->prepare($sql)) {
+            $stmt->bind_param("sssssssss", $nombre, $apellidos, $telefono, $identificacion, $ficha, $email, $jornada, $contrasena, $programa_formacion);
         }
+    } elseif ($tipo_usuario === "admin") {
+        $sql = "INSERT INTO administradores (nombre, apellidos, celular, identificacion, email, contrasena) 
+                VALUES (?, ?, ?, ?, ?, ?)";
 
-        $stmt->close();
+        if ($stmt = $conn->prepare($sql)) {
+            $stmt->bind_param("ssssss", $nombre, $apellidos, $telefono, $identificacion, $email, $contrasena);
+        }
     } else {
         echo "<script>
-                alert('Error en la preparación de la consulta.');
+                alert('Tipo de usuario no válido.');
+                window.history.back();
+              </script>";
+        exit();
+    }
+
+    // Ejecutar la consulta
+    if ($stmt->execute()) {
+        echo "<script>
+                alert('Usuario registrado con éxito');
+                window.location.href = '../login/inicioSesion_usuario.html';
+              </script>";
+    } else {
+        echo "<script>
+                alert('Error al registrar usuario: " . $stmt->error . "');
                 window.history.back();
               </script>";
     }
 
+    $stmt->close();
     $conn->close();
 }
 ?>
