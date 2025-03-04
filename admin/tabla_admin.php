@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar'])) {
     $stmt->bind_param("sssssi", $nombre, $apellidos, $celular, $identificacion, $email, $id);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Datos actualizados correctamente'); window.location.href = 'tabla_administradores.php';</script>";
+        echo "<script>alert('Datos actualizados correctamente'); window.location.href = 'tabla_admin.php';</script>";
         exit();
     } else {
         echo "<script>alert('Error al actualizar los datos.');</script>";
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar'])) {
 }
 
 // Obtener la lista de administradores
-$sql = "SELECT id, nombre, apellidos, celular, identificacion, email FROM administradores";
+$sql = "SELECT * FROM administradores";
 $result = $conn->query($sql);
 ?>
 
@@ -51,8 +51,20 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../Imagenes/image-removebg-preview.png" alt="Lock&Go">
+            <span class="logo-text">Lock&Go</span>
+        </div>
+        <ul class="menu">
+            <li><a href="../Pagina index/index.html">Inicio</a></li>
+            <li><a href="../Pagina Reserva/bienvenida.html">Casilleros</a></li>
+            <li><a href="../contactenos/contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
     <h2>Lista de Administradores</h2>
-    <table border="1">
+    <table border="1" align="center">
         <tr>
             <th>Nombre</th>
             <th>Apellidos</th>
@@ -101,6 +113,14 @@ $result = $conn->query($sql);
         <button type="submit" name="editar">Actualizar</button>
     </form>
     <?php } ?>
+
+    <footer>
+        <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica (CENIGRAF) - Regional Distrito Capital.</p>
+        <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
+        <p>Atención telefónica: Lunes a viernes 7:00 a.m. a 7:00 p.m. - Sábados 8:00 a.m. a 1:00 p.m.</p>
+        <p>Línea de atención al ciudadano: Bogotá +(57) 601 7366060 - Línea gratuita: 018000 910270</p>
+        <p>Contacto: <a href="mailto:servicioalciudadano@sena.edu.co">servicioalciudadano@sena.edu.co</a></p>
+    </footer>
 </body>
 </html>
 <?php $conn->close(); ?>

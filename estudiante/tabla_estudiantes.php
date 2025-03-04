@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar'])) {
 }
 
 // Obtener la lista de estudiantes
-$sql = "SELECT id, nombre, apellidos, celular, identificacion, ficha, email, jornada, programa_formacion FROM estudiantes";
+$sql = "SELECT * FROM estudiantes";
 $result = $conn->query($sql);
 ?>
 
@@ -54,8 +54,20 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../Imagenes/image-removebg-preview.png" alt="Lock&Go">
+            <span class="logo-text">Lock&Go</span>
+        </div>
+        <ul class="menu">
+            <li><a href="../Pagina index/index.html">Inicio</a></li>
+            <li><a href="../Pagina Reserva/bienvenida.html">Casilleros</a></li>
+            <li><a href="../contactenos/contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+
     <h2>Lista de Estudiantes</h2>
-    <table border="1">
+    <table border="1" align="center">
         <tr>
             <th>Nombre</th>
             <th>Apellidos</th>
@@ -64,7 +76,7 @@ $result = $conn->query($sql);
             <th>Ficha</th>
             <th>Email</th>
             <th>Jornada</th>
-            <th>Programa de Formación</th>
+            <th>Programa</th>
             <th>Acciones</th>
         </tr>
         <?php while ($row = $result->fetch_assoc()) { ?>
@@ -111,15 +123,23 @@ $result = $conn->query($sql);
         <input type="email" name="email" value="<?php echo $estudiante['email']; ?>" required><br>
         <label>Jornada:</label>
         <select name="jornada" required>
-            <option value="Mañana" <?php if ($estudiante['jornada'] == 'Mañana') echo 'selected'; ?>>Mañana</option>
-            <option value="Tarde" <?php if ($estudiante['jornada'] == 'Tarde') echo 'selected'; ?>>Tarde</option>
-            <option value="Noche" <?php if ($estudiante['jornada'] == 'Noche') echo 'selected'; ?>>Noche</option>
+            <option value="Mañana" <?php echo ($estudiante['jornada'] == 'Mañana') ? 'selected' : ''; ?>>Mañana</option>
+            <option value="Tarde" <?php echo ($estudiante['jornada'] == 'Tarde') ? 'selected' : ''; ?>>Tarde</option>
+            <option value="Noche" <?php echo ($estudiante['jornada'] == 'Noche') ? 'selected' : ''; ?>>Noche</option>
         </select><br>
         <label>Programa de Formación:</label>
         <input type="text" name="programa_formacion" value="<?php echo $estudiante['programa_formacion']; ?>" required><br>
         <button type="submit" name="editar">Actualizar</button>
     </form>
     <?php } ?>
+
+    <footer>
+        <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica (CENIGRAF) - Regional Distrito Capital.</p>
+        <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
+        <p>Atención telefónica: Lunes a viernes 7:00 a.m. a 7:00 p.m. - Sábados 8:00 a.m. a 1:00 p.m.</p>
+        <p>Línea de atención al ciudadano: Bogotá +(57) 601 7366060 - Línea gratuita: 018000 910270</p>
+        <p>Contacto: <a href="mailto:servicioalciudadano@sena.edu.co">servicioalciudadano@sena.edu.co</a></p>
+    </footer>
 </body>
 </html>
 <?php $conn->close(); ?>
