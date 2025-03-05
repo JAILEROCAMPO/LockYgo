@@ -1,15 +1,17 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = ""; // Reemplázalo con tu contraseña real si tienes una
-$dbname = "lockygo";
+$servername = "lockygo.mysql.database.azure.com";
+$username = "jaileradmin";
+$password = "Babahaha19";
+$database = "lockygo";
 $port = 3306;
 
-// Crear la conexión con las variables correctas
-$conn = new mysqli($host, $user, $pass, $dbname, $port);
+// Crear conexión con SSL sin especificar cafile
+$conn = mysqli_init();
+mysqli_real_connect($conn, $servername, $username, $password, $database, $port, NULL, MYSQLI_CLIENT_SSL);
 
-// Verificar la conexión
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
+if (mysqli_connect_errno()) {
+    die("❌ Error de conexión: " . mysqli_connect_error());
 }
+
+echo "✅ Conexión segura establecida correctamente.";
 ?>
