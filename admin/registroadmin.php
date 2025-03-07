@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         echo "<script>
                 alert('Usuario registrado con éxito');
-                window.location.href = '';
+                window.location.href = 'registros.html';
               </script>";
     } else {
         echo "<script>

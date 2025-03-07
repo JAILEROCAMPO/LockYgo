@@ -13,5 +13,5 @@ if (mysqli_connect_errno()) {
     die("❌ Error de conexión: " . mysqli_connect_error());
 }
 
-echo "✅ Conexión segura establecida correctamente.";
+
 ?>
