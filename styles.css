@@ -486,6 +486,11 @@ footer a:hover {
     background-color: #e66b00;
     border-color: #ffffff;
 }
+.ocupado {
+    background-color: red;
+    pointer-events: none;
+    opacity: 0.6;
+}
 
 /* Estilos para la ventana emergente */
 .ventana {

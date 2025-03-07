@@ -46,7 +46,6 @@ document.querySelectorAll('.btn.bloque').forEach(button => {
     });
 });
 
-// Función para mostrar la ventana emergente
 function mostrarVentanaEmergente(numCasillero) {
     const ventana = document.getElementById('ventanaEmergente');
     const numeroCasillero = document.getElementById('numeroCasillero');
@@ -55,18 +54,74 @@ function mostrarVentanaEmergente(numCasillero) {
     // Mostrar la ventana emergente
     ventana.style.display = 'flex';
 
-    // Acciones para el botón de "Reservar Casillero"
-    document.getElementById('reservarButton').addEventListener('click', function() {
-        alert(`Casillero ${numCasillero} reservado con éxito!`);
-        cerrarVentanaEmergente();
+    // Remover eventos previos para evitar acumulación
+    const reservarButton = document.getElementById('reservarButton');
+    const nuevoBoton = reservarButton.cloneNode(true);
+    reservarButton.parentNode.replaceChild(nuevoBoton, reservarButton);
+
+    // Agregar nuevo evento al botón de reservar
+    nuevoBoton.addEventListener('click', function() {
+        reservarCasillero(numCasillero);
     });
 
-    // Acciones para el botón de "Cerrar"
-    document.getElementById('cerrarButton').addEventListener('click', cerrarVentanaEmergente);
+    
 }
-
-// Función para cerrar la ventana emergente
 function cerrarVentanaEmergente() {
     const ventana = document.getElementById('ventanaEmergente');
-    ventana.style.display = 'none';
+    if (ventana) {
+        ventana.style.display = 'none';
+    }
 }
+
+
+
+// Función para enviar la solicitud de reserva al backend
+function reservarCasillero(numCasillero) {
+    const estudianteId = 1; // Asegúrate de obtener el ID correcto
+
+    console.log("Reservando casillero:", numCasillero, "para estudiante:", estudianteId); // Para depuración
+
+    fetch('reservar_casillero.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `casillero_id=${numCasillero}&estudiante_id=${estudianteId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Respuesta del servidor:", data); // Ver si llega la respuesta
+        alert(data.message);
+        if (data.success) {
+            actualizarCasilleroVisual(numCasillero);
+            cerrarVentanaEmergente(); // Cerrar ventana después de reservar
+        }
+    })
+    .catch(error => {
+        console.error('Error en la solicitud:', error);
+        alert("Hubo un error al reservar el casillero.");
+    });
+}
+
+// Función para actualizar la interfaz
+function actualizarCasilleroVisual(numCasillero) {
+    const casillero = document.querySelector(`.celda:contains('${numCasillero}')`);
+    if (casillero) {
+        casillero.classList.add('ocupado'); // Asegúrate de tener una clase CSS para estilos
+        casillero.onclick = null; // Deshabilitar el clic en casilleros ocupados
+    }
+}
+document.addEventListener("DOMContentLoaded", function() {
+    fetch('obtener_casilleros_ocupados.php')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(numCasillero => {
+                const casillero = document.querySelector(`.celda:contains('${numCasillero}')`);
+                if (casillero) {
+                    casillero.classList.add('ocupado');
+                    casillero.onclick = null;
+                }
+            });
+        })
+        .catch(error => console.error('Error al cargar casilleros ocupados:', error));
+});
