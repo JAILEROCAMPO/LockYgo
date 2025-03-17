@@ -1,9 +1,38 @@
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+include '../conexion/db.php';
+
+if (isset($_GET["token"])) {
+    $token = trim($_GET["token"]);
+
+    // Buscar el token en ambas tablas con UNION
+    $sql = "SELECT 'estudiante' AS tipo_usuario, id FROM estudiantes WHERE token = ? AND expira_token > NOW()
+            UNION
+            SELECT 'admin' AS tipo_usuario, id FROM administradores WHERE token = ? AND expira_token > NOW()";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $token, $token);
+    $stmt->execute();
+    $stmt->store_result();
+
+    // Verificar si hay resultados
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($tipo_usuario, $id);
+        $stmt->fetch();
+    } else {
+        echo "<script>alert('Token inválido o expirado.'); window.location.href = '../login/inicioSesion_usuario.html';</script>";
+        exit();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Lock&Go</title>
+    <title>Recuperar Contraseña - Lock&Go</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,7 +40,6 @@
     <link rel="icon" type="image/png" href="../Imagenes/image-removebg-preview.png">
 </head>
 <body>
-
 
     <!-- Barra de navegación -->
     <nav class="navbar">
@@ -25,21 +53,21 @@
             <li><a href="../contactenos/contacto.html">Contacto</a></li>
         </ul>
         <div class="user-icon"> 
-            <a href="inicioSesion_usuario.html"><img src="../Imagenes/perfil.png" alt="Perfil"></a>
+            <a href="../login/inicioSesion_usuario.html"><img src="../Imagenes/perfil.png" alt="Perfil"></a>
         </div>
     </nav>
 
-    <!-- Contenedor de inicio de sesión -->
-    <div class="login-page" class="login-container">
+    <!-- Contenedor de recuperación de contraseña -->
+    <div class="login-page login-container">
         <h2>Recupera tu cuenta</h2>
-        <form action="login.php" method="POST">
-            <div class="login-input-group">
-                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Usuario">
-                <input type="email" name="email" placeholder="Identificacion o correo" required>
-            </div>
-            <button type="submit" class="login-btn">Recuperar</button>
+        <form action="actualizar_contrasena.php" method="POST">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
+            <input type="hidden" name="tipo_usuario" value="<?php echo htmlspecialchars($tipo_usuario); ?>">
+            <label for="password">Nueva Contraseña:</label>
+            <input type="password" name="password" required>
+            <button type="submit">Actualizar Contraseña</button>
         </form>
-        <p>¿Tienes cuenta? <a href="../login/inicioSesion_usuario.html">Inicio sesion</a></p>
+        <p>¿Tienes cuenta? <a href="../login/inicioSesion_usuario.html">Iniciar sesión</a></p>
     </div>
 
     <!-- Pie de página -->
@@ -49,7 +77,6 @@
         <p>Atención telefónica: Lunes a viernes 7:00 a.m. a 7:00 p.m. - Sábados 8:00 a.m. a 1:00 p.m.</p>
         <p>Línea de atención al ciudadano: Bogotá +(57) 601 7366060 - Línea gratuita: 018000 910270</p>
         <p>Contacto: <a href="mailto:servicioalciudadano@sena.edu.co">servicioalciudadano@sena.edu.co</a></p>
-
 
         <div class="social-icons">
             <a href="https://www.facebook.com/SENADistritoCapital/" target="_blank">
@@ -64,7 +91,6 @@
         </div>
         <p><a href="../Contactenos/privacidad.html">Aviso de privacidad</a></p>
     </footer>
-
 
 </body>
 </html>
