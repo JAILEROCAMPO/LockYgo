@@ -31,7 +31,13 @@
             
             
             <form action="registroadmin.php" method="POST" class="register-form">
-                <input type="hidden" name="tipo_usuario" value="estudiante" class="">
+                <div class="register-input-group">
+                    <label for="tipo_usuario">Tipo de usuario:</label>
+                    <select id="tipo_usuario" name="tipo_usuario" required>
+                        <option value="admin">Administrador</option>
+                        <option value="estudiante">Estudiante</option>
+                    </select>
+                </div>
             
                 <div class="register-input-group">
                     <label for="nombre">Nombre:</label>
@@ -58,17 +64,49 @@
                     <input type="email" id="email" name="email" required>
                 </div>
             
-            
                 <div class="register-input-group">
                     <label for="contraseña">Contraseña:</label>
                     <input type="password" id="contraseña" name="contraseña" required>
                 </div>
+            
                 <div class="register-input-group">
-                        <label for="contraseña">Confirmar contraseña:</label>
-                        <input type="password" id="contraseña" name="contraseña" required>
+                    <label for="confirmar_contraseña">Confirmar contraseña:</label>
+                    <input type="password" id="confirmar_contraseña" name="confirmar_contraseña" required>
+                </div>
+            
+                <!-- Campos extra para estudiantes -->
+                <div id="campos_estudiante" style="display: none;">
+                    <div class="register-input-group">
+                        <label for="ficha">Ficha:</label>
+                        <input type="text" id="ficha" name="ficha">
                     </div>
+            
+                    <div class="register-input-group">
+                        <label for="jornada">Jornada:</label>
+                        <input type="text" id="jornada" name="jornada">
+                    </div>
+            
+                    <div class="register-input-group">
+                        <label for="programa">Programa de Formación:</label>
+                        <input type="text" id="programa" name="programa">
+                    </div>
+                </div>
+            
                 <button type="submit" class="register-btn">Registrarse</button>
             </form>
+            
+            <script>
+                // Mostrar u ocultar campos de estudiante según selección
+                document.getElementById("tipo_usuario").addEventListener("change", function () {
+                    let camposEstudiante = document.getElementById("campos_estudiante");
+                    if (this.value === "estudiante") {
+                        camposEstudiante.style.display = "block";
+                    } else {
+                        camposEstudiante.style.display = "none";
+                    }
+                });
+            </script>
+            
             <p>Registrar Estudiante <a href="RegistrarE.html">Aquí</a></p>
             
 
