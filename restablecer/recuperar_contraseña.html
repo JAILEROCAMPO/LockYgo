@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lock&Go - Reserva de Casilleros</title>
+    <title>Recuperar Contraseña - Lock&Go</title>
     <link rel="stylesheet" href="../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="../Imagenes/image-removebg-preview.png">
 </head>
 <body>
+
+    <!-- Barra de navegación -->
     <nav class="navbar">
         <div class="logo">
             <img src="../Imagenes/image-removebg-preview.png" alt="Lock&Go">
@@ -21,37 +27,19 @@
             <a href="../login/inicioSesion_usuario.html"><img src="../Imagenes/perfil.png" alt="Perfil"></a>
         </div>
     </nav>
-    <section class="tittle-welcome">
-        <h2>Por favor selecciona el casillero que mejor se te facilite</h2>
-    </section>
 
-    <!--contenedor-->
-
-    <section class="contenedor-botones">
-        <button class="btn bloque" data-bloque="A">Bloque A</button>
-        <button class="btn bloque" data-bloque="B">Bloque B</button>
-        <button class="btn bloque" data-bloque="C">Bloque C</button>
-        <button class="btn bloque" data-bloque="D">Bloque D</button>
-        <button class="btn bloque" data-bloque="E">Bloque E</button>
-    </section>
-    
-    <div class="contenedor-cuadricula" id="cuadricula"></div>
-
-    <!--codigo javascript-->
-    
-
-    <!--Ventana emergente-->
-    <div id="ventanaEmergente" class="ventana">
-        <div class="contenido-ventana">
-            <h3>Reservar Casillero</h3>
-            <p>¿Deseas reservar el casillero <span id="numeroCasillero"></span>?</p>
-            <button id="reservarButton">Reservar Casillero</button>
-            <button id="cerrarButton">Cerrar</button>
-        </div>
+    <!-- Contenedor de recuperación de contraseña -->
+    <div class="login-page" class="login-container">
+        <h2>Recupera tu cuenta</h2>
+        <form action="enviar_correo.php" method="POST">
+            <label for="email">Ingresa tu correo:</label>
+            <input type="email" name="email" required>
+            <button type="submit">Enviar enlace</button>
+        </form>
+        <p>¿Tienes cuenta? <a href="../login/inicioSesion_usuario.html">Iniciar sesión</a></p>
     </div>
-    <div class="gift">
-    <img src="../Imagenes/gitmapa.gif" alt="planos" class="mapa1">
-    </div>
+
+    <!-- Pie de página -->
     <footer>
         <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica (CENIGRAF) - Regional Distrito Capital.</p>
         <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
@@ -72,8 +60,6 @@
         </div>
         <p><a href="../Contactenos/privacidad.html">Aviso de privacidad</a></p>
     </footer>
-
-    <script src="bienvenida.js"></script>
 
 </body>
 </html>
