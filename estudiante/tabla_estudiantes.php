@@ -1,12 +1,12 @@
 <?php
-include "../conexion/db.php"; // Conexión a la base de datos
+include "../conexion/dbpdo.php"; // Conexión a la base de datos
 
 // Eliminar estudiante si se solicita
 if (isset($_GET['eliminar'])) {
     $id = $_GET['eliminar'];
     $sql = "DELETE FROM estudiantes WHERE id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
+    $stmt->bindParam(1, $id, PDO::PARAM_INT);
     
     if ($stmt->execute()) {
         echo "<script>alert('Estudiante eliminado correctamente'); window.location.href = 'tabla_estudiantes.php';</script>";
@@ -30,7 +30,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar'])) {
 
     $sql = "UPDATE estudiantes SET nombre=?, apellidos=?, celular=?, identificacion=?, ficha=?, email=?, jornada=?, programa_formacion=? WHERE id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssssi", $nombre, $apellidos, $celular, $identificacion, $ficha, $email, $jornada, $programa_formacion, $id);
+    $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
+    $stmt->bindParam(2, $apellidos, PDO::PARAM_STR);
+    $stmt->bindParam(3, $celular, PDO::PARAM_STR);
+    $stmt->bindParam(4, $identificacion, PDO::PARAM_STR);
+    $stmt->bindParam(5, $ficha, PDO::PARAM_STR);
+    $stmt->bindParam(6, $email, PDO::PARAM_STR);
+    $stmt->bindParam(7, $jornada, PDO::PARAM_STR);
+    $stmt->bindParam(8, $programa_formacion, PDO::PARAM_STR);
+    $stmt->bindParam(9, $id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
         echo "<script>alert('Datos actualizados correctamente'); window.location.href = 'tabla_estudiantes.php';</script>";
@@ -42,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar'])) {
 
 // Obtener la lista de estudiantes
 $sql = "SELECT * FROM estudiantes";
-$result = $conn->query($sql);
+$stmt = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -79,7 +87,7 @@ $result = $conn->query($sql);
             <th>Programa</th>
             <th>Acciones</th>
         </tr>
-        <?php while ($row = $result->fetch_assoc()) { ?>
+        <?php while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { ?>
         <tr>
             <td><?php echo $row["nombre"]; ?></td>
             <td><?php echo $row["apellidos"]; ?></td>
@@ -101,10 +109,9 @@ $result = $conn->query($sql);
         $id = $_GET['editar'];
         $sql = "SELECT * FROM estudiantes WHERE id=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id);
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
         $stmt->execute();
-        $resultado = $stmt->get_result();
-        $estudiante = $resultado->fetch_assoc();
+        $estudiante = $stmt->fetch(PDO::FETCH_ASSOC);
     ?>
     <h2>Editar Estudiante</h2>
     <form method="POST">
@@ -142,4 +149,4 @@ $result = $conn->query($sql);
     </footer>
 </body>
 </html>
-<?php $conn->close(); ?>
+<?php $conn = null; ?> <!-- Cerrar la conexión PDO -->

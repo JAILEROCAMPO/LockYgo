@@ -1,12 +1,12 @@
 <?php
-include "../conexion/db.php"; // Conexión a la base de datos
+include "../conexion/dbpdo.php";
 
 // Eliminar administrador si se solicita
 if (isset($_GET['eliminar'])) {
     $id = $_GET['eliminar'];
     $sql = "DELETE FROM administradores WHERE id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
+    $stmt->bindParam(1, $id, PDO::PARAM_INT);
     
     if ($stmt->execute()) {
         echo "<script>alert('Administrador eliminado correctamente'); window.location.href = 'tabla_administradores.php';</script>";
@@ -27,7 +27,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar'])) {
 
     $sql = "UPDATE administradores SET nombre=?, apellidos=?, celular=?, identificacion=?, email=? WHERE id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssi", $nombre, $apellidos, $celular, $identificacion, $email, $id);
+    $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
+    $stmt->bindParam(2, $apellidos, PDO::PARAM_STR);
+    $stmt->bindParam(3, $celular, PDO::PARAM_STR);
+    $stmt->bindParam(4, $identificacion, PDO::PARAM_STR);
+    $stmt->bindParam(5, $email, PDO::PARAM_STR);
+    $stmt->bindParam(6, $id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
         echo "<script>alert('Datos actualizados correctamente'); window.location.href = 'tabla_admin.php';</script>";
@@ -39,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['editar'])) {
 
 // Obtener la lista de administradores
 $sql = "SELECT * FROM administradores";
-$result = $conn->query($sql);
+$stmt = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -73,7 +78,7 @@ $result = $conn->query($sql);
             <th>Email</th>
             <th>Acciones</th>
         </tr>
-        <?php while ($row = $result->fetch_assoc()) { ?>
+        <?php while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { ?>
         <tr>
             <td><?php echo $row["nombre"]; ?></td>
             <td><?php echo $row["apellidos"]; ?></td>
@@ -92,24 +97,23 @@ $result = $conn->query($sql);
         $id = $_GET['editar'];
         $sql = "SELECT * FROM administradores WHERE id=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id);
+        $stmt->bindParam(1, $id, PDO::PARAM_INT);
         $stmt->execute();
-        $resultado = $stmt->get_result();
-        $admin = $resultado->fetch_assoc();
+        $administrador = $stmt->fetch(PDO::FETCH_ASSOC);
     ?>
     <h2>Editar Administrador</h2>
     <form method="POST">
-        <input type="hidden" name="id" value="<?php echo $admin['id']; ?>">
+        <input type="hidden" name="id" value="<?php echo $administrador['id']; ?>">
         <label>Nombre:</label>
-        <input type="text" name="nombre" value="<?php echo $admin['nombre']; ?>" required><br>
+        <input type="text" name="nombre" value="<?php echo $administrador['nombre']; ?>" required><br>
         <label>Apellidos:</label>
-        <input type="text" name="apellidos" value="<?php echo $admin['apellidos']; ?>" required><br>
+        <input type="text" name="apellidos" value="<?php echo $administrador['apellidos']; ?>" required><br>
         <label>Celular:</label>
-        <input type="text" name="celular" value="<?php echo $admin['celular']; ?>" required><br>
+        <input type="text" name="celular" value="<?php echo $administrador['celular']; ?>" required><br>
         <label>Identificación:</label>
-        <input type="text" name="identificacion" value="<?php echo $admin['identificacion']; ?>" required><br>
+        <input type="text" name="identificacion" value="<?php echo $administrador['identificacion']; ?>" required><br>
         <label>Email:</label>
-        <input type="email" name="email" value="<?php echo $admin['email']; ?>" required><br>
+        <input type="email" name="email" value="<?php echo $administrador['email']; ?>" required><br>
         <button type="submit" name="editar">Actualizar</button>
     </form>
     <?php } ?>
@@ -123,4 +127,4 @@ $result = $conn->query($sql);
     </footer>
 </body>
 </html>
-<?php $conn->close(); ?>
+<?php $conn = null; ?> <!-- Cerrar la conexión PDO -->

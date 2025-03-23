@@ -46,24 +46,27 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $contrasena = password_hash($_POST["contraseña"], PASSWORD_DEFAULT);
 
         try{
-            $sql = "INSERT INTO estudiantes(nombre,apellidos,celular,identificacion,ficha,email,jornada,programa_formacion,contrasena)VALUES(:nombre,:apellidos,:celular,:identificacion,:ficha,:email,:jornada,:programa_formacion,:contrasena)";
+            $sql = "INSERT INTO estudiantes(nombre, apellidos, celular, identificacion, ficha, email, jornada, programa_formacion, contrasena) 
+            VALUES(:nombre, :apellidos, :celular, :identificacion, :ficha, :email, :jornada, :programa_formacion, :contrasena)";
 
             $stmt = $conn->prepare($sql);
 
-            $stmt->bindParam(":nombre",$nombre,PDO::PARAM_STR);
-            $stmt->bindParam(":apellidos",$apellido,PDO::PARAM_STR);
-            $stmt->bindParam(":celular",$telefono,PDO::PARAM_STR);
-            $stmt->bindParam(":identificacion",$identificacion,PDO::PARAM_STR);
-            $stmt->bindParam(":ficha",$ficha,PDO::PARAM_STR);
-            $stmt->bindParam(":email",$email,PDO::PARAM_STR);
-            $stmt->bindParam(":jornada",$jornada,PDO::PARAM_STR);
-            $stmt->bindParam(":programa_formacion",$programaf,PDO::PARAM_STR);
+            $stmt->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+            $stmt->bindParam(":apellidos", $apellido, PDO::PARAM_STR);
+            $stmt->bindParam(":celular", $telefono, PDO::PARAM_STR);
+            $stmt->bindParam(":identificacion", $identificacion, PDO::PARAM_STR);
+            $stmt->bindParam(":ficha", $ficha, PDO::PARAM_STR);
+            $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+            $stmt->bindParam(":jornada", $jornada, PDO::PARAM_STR);
+            $stmt->bindParam(":programa_formacion", $programaf, PDO::PARAM_STR);
+            $stmt->bindParam(":contrasena", $contrasena, PDO::PARAM_STR);  // Añadir la contraseña aquí
 
-            if($stmt->execute()){
-                echo"Estudiante registrado exitosamente";
-            }else{
-                echo"error al registar Estudiante";
+            if ($stmt->execute()) {
+                echo "Estudiante registrado exitosamente";
+            } else {
+                echo "Error al registrar Estudiante";
             }
+
             
         }catch(PDOException $error){
             echo"Registro fallido: ".$error->getMessage();
