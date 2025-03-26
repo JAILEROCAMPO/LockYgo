@@ -1,7 +1,6 @@
 <?php
-require '../autoload.php'; // Cargamos la librería JWT (si la usas)
-include "../conexion/dbpdo.php"; // Conexión a la base de datos
-include "../auth/token.php"; // Importamos la función para generar tokens
+include "../conexion/dbpdo.php"; // Conexión a la BD
+include "../autentificacion/token.php"; // Archivo para generar el token
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
@@ -16,10 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($admin && password_verify($password, $admin['contrasena'])) {
-            $token = generarToken($admin["id"], "admin"); // Generar token
-            setcookie("token", $token, time() + 3600, "/", "", false, true); // Guardar el token en una cookie
+            $token = generarToken($admin["id"], "admin");
 
-            header("Location: ../admin/index_admin.html");
+            // Guardar token en cookie (httpOnly y secure)
+            setcookie("token", $token, time() + 3600, "/", "", true, true);
+
+            echo "<script>window.location.href = '../admin/index_admin.html';</script>";
             exit();
         }
 
@@ -31,20 +32,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $estudiante = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($estudiante && password_verify($password, $estudiante['contrasena'])) {
-            $token = generarToken($estudiante["id"], "estudiante"); // Generar token
-            setcookie("token", $token, time() + 3600, "/", "", false, true); // Guardar el token en una cookie
+            $token = generarToken($estudiante["id"], "estudiante");
 
-            header("Location: ../estudiante/index_estudiante.html");
+            // Guardar token en cookie (httpOnly y secure)
+            setcookie("token", $token, time() + 3600, "/", "", true, true);
+
+            echo "<script>window.location.href = '../estudiante/index_estudiante.html';</script>";
             exit();
         }
 
-        // Si no coincide con ningún usuario
-        echo "<script>alert('Datos ingresados incorrectos'); window.history.back();</script>";
+        echo "<script>alert('Credenciales incorrectas'); window.history.back();</script>";
 
     } catch (PDOException $e) {
-        echo "Error en la conexión: " . $e->getMessage();
+        echo "<script>alert('Error en la conexión: " . $e->getMessage() . "');</script>";
     }
 }
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 ?>
