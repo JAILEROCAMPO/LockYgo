@@ -1,5 +1,13 @@
 <?php
 include '../conexion/db.php';
+include "../autentificacion/validar_token.php";
+include "../autentificacion/validar_token.php";
+
+if (!isset($_COOKIE["token"])) {
+    header("Location: ../login/inicioSesion_usuario.html");
+    exit();
+}
+
 
 // Obtener casilleros
 $query = "SELECT * FROM casilleros";

@@ -1,30 +1,27 @@
 <?php
+include "../conexion/dbpdo.php"; // Incluir conexión a la base de datos
+
 function validarToken($token) {
-    $claveSecreta = "cX2d9!@#5bP*Ly0m&z8";
-
-    $partes = explode(".", base64_decode($token));
-    if (count($partes) !== 2) {
-        return false; // Token inválido
+    global $conn;
+    
+    if (!$token) {
+        return ["success" => false];
     }
 
-    list($datos, $firma) = $partes;
-    $datosArray = json_decode($datos, true);
+    $sql = "SELECT id, rol FROM usuarios WHERE token = ? LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(1, $token, PDO::PARAM_STR);
+    $stmt->execute();
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$datosArray || !isset($datosArray["exp"]) || $datosArray["exp"] < time()) {
-        return false; // Token expirado o inválido
+    if ($usuario) {
+        return [
+            "success" => true,
+            "id" => $usuario["id"],
+            "rol" => $usuario["rol"]
+        ];
+    } else {
+        return ["success" => false];
     }
-
-    $firmaVerificada = hash_hmac("sha256", $datos, $claveSecreta);
-    if (!hash_equals($firmaVerificada, $firma)) {
-        return false; // Token alterado
-    }
-
-    // 🔄 Si faltan menos de 5 minutos para expirar, genera un nuevo token
-    if ($datosArray["exp"] - time() < 300) {
-        $nuevoToken = generarToken($datosArray["id"], $datosArray["rol"]);
-        setcookie("token", $nuevoToken, time() + 3600, "/", "", false, true);
-    }
-
-    return $datosArray;
 }
 ?>

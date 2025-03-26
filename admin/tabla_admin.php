@@ -1,5 +1,11 @@
 <?php
 include "../conexion/dbpdo.php";
+include "../autentificacion/validar_token.php";
+
+if (!isset($_COOKIE["token"])) {
+    header("Location: ../login/inicioSesion_usuario.html");
+    exit();
+}
 
 // Eliminar administrador si se solicita
 if (isset($_GET['eliminar'])) {

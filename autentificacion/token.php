@@ -1,23 +1,26 @@
 <?php
-/** creamos una funciona que maneje el token y expire en una hora 
- *@param int $idUsuario ID del usuario autenticado
- *@return string token generado en base64
-*/
+session_start(); // Inicia la sesión
 
-function generarToken($idUsuario){
-    $claveSecreta = "cX2d9!@#5bP*Ly0m&z8";
-    $tiempoExpiracion = time() + 3600; // 1 hora de token valido
-
-    //datos que contienen el token
-    $datosToken=[
-        "id" => $idUsuario,
+function generarToken($id_usuario, $rol) {
+    $token = bin2hex(random_bytes(32)); // Token aleatorio seguro
+    $_SESSION["tokens"][$token] = [
+        "id" => $id_usuario,
         "rol" => $rol,
-        "exp" => $tiempoExpiracion
+        "expira" => time() + 3600 // Expira en 1 hora
     ];
-    //se genera el token firmandolo con HMAC-SHA256
-    $token = base64_encode(json_encode($datosToken).".".hash_hmac("sha256", json_encode($datosToken),$claveSecreta));
-    //retornamos el token para usar en otros archivos
-
     return $token;
+}
+
+function validarToken($token) {
+    if (isset($_SESSION["tokens"][$token])) {
+        if ($_SESSION["tokens"][$token]["expira"] > time()) {
+            return [
+                "success" => true,
+                "id" => $_SESSION["tokens"][$token]["id"],
+                "rol" => $_SESSION["tokens"][$token]["rol"]
+            ];
+        }
+    }
+    return ["success" => false];
 }
 ?>

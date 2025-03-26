@@ -1,5 +1,12 @@
 <?php
 include "../conexion/dbpdo.php";
+include "../autentificacion/validar_token.php";
+
+if (!isset($_COOKIE["token"])) {
+    header("Location: ../login/inicioSesion_usuario.html");
+    exit();
+}
+
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $usuario = $_POST["tipo_usuario"];

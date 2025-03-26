@@ -1,43 +1,33 @@
 <?php
-include "../conexion/dbpdo.php"; // Conexión a la BD
-include "../autentificacion/token.php"; // Archivo para generar el token
+include "../conexion/dbpdo.php";
+include "../autentificacion/token.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["contraseña"];
 
     try {
-        // Buscar en la tabla de administradores
-        $sql_admin = "SELECT id, nombre, contrasena FROM administradores WHERE email = :email";
-        $stmt = $conn->prepare($sql_admin);
+        $stmt = $conn->prepare("SELECT id, nombre, contrasena FROM administradores WHERE email = :email");
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($admin && password_verify($password, $admin['contrasena'])) {
             $token = generarToken($admin["id"], "admin");
-
-            // Guardar token en cookie (httpOnly y secure)
-            setcookie("token", $token, time() + 3600, "/", "", true, true);
-
-            echo "<script>window.location.href = '../admin/index_admin.html';</script>";
+            setcookie("token", $token, time() + 3600, "/", "", false, true);
+            header("Location: ../admin/index_admin.html");
             exit();
         }
 
-        // Buscar en la tabla de estudiantes
-        $sql_estudiante = "SELECT id, nombre, contrasena FROM estudiantes WHERE email = :email";
-        $stmt = $conn->prepare($sql_estudiante);
+        $stmt = $conn->prepare("SELECT id, nombre, contrasena FROM estudiantes WHERE email = :email");
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $estudiante = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($estudiante && password_verify($password, $estudiante['contrasena'])) {
             $token = generarToken($estudiante["id"], "estudiante");
-
-            // Guardar token en cookie (httpOnly y secure)
-            setcookie("token", $token, time() + 3600, "/", "", true, true);
-
-            echo "<script>window.location.href = '../estudiante/index_estudiante.html';</script>";
+            setcookie("token", $token, time() + 3600, "/", "", false, true);
+            header("Location: ../estudiante/index_estudiante.html");
             exit();
         }
 

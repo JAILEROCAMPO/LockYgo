@@ -1,5 +1,11 @@
 <?php
 include "../conexion/dbpdo.php"; // Conexión a la base de datos
+include "../autentificacion/validar_token.php";
+
+if (!isset($_COOKIE["token"])) {
+    header("Location: ../login/inicioSesion_usuario.html");
+    exit();
+}
 
 // Eliminar estudiante si se solicita
 if (isset($_GET['eliminar'])) {
@@ -147,6 +153,7 @@ $stmt = $conn->query($sql);
         <p>Línea de atención al ciudadano: Bogotá +(57) 601 7366060 - Línea gratuita: 018000 910270</p>
         <p>Contacto: <a href="mailto:servicioalciudadano@sena.edu.co">servicioalciudadano@sena.edu.co</a></p>
     </footer>
+    <script src="../autentificacion/validar_sesion.js"></script>
 </body>
 </html>
 <?php $conn = null; ?> <!-- Cerrar la conexión PDO -->
