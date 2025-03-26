@@ -18,6 +18,5 @@ try{
     //mostrar el error si la conexion falla
     die("error de conexion: " . $e -> getMessage());
 }
-#retornamos la conexion para usarla en otros archivos
-return $conn;
+
 ?>
