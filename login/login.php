@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Si no coincide con ningún usuario
-        echo "<script>alert('Credenciales incorrectas'); window.history.back();</script>";
+        echo "<script>alert('Datos ingresados incorrectos'); window.history.back();</script>";
 
     } catch (PDOException $e) {
         echo "Error en la conexión: " . $e->getMessage();
