@@ -1,5 +1,5 @@
 <?php
-include "../conexion/db.php"; // Asegúrate de que este archivo establece la conexión correctamente
+include "../conexion/dbpdo.php"; // Asegúrate de que este archivo establece la conexión correctamente
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST["nombre"];
@@ -25,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(":email",$email,PDO::PARAM_STR);
         $stmt->bindParam(":jornada",$jornada,PDO::PARAM_STR);
         $stmt->bindParam(":programa_formacion",$programaf,PDO::PARAM_STR);
+        $stmt->bindParam(":contrasena",$contrasena,PDO::PARAM_STR);
 
         if($stmt->execute()){
             echo"Estudiante registrado exitosamente";

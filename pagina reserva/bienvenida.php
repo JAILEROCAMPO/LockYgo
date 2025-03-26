@@ -1,6 +1,5 @@
 <?php
-include '../conexion/db.php';
-include "../autentificacion/validar_token.php";
+include '../conexion/dbpdo.php';
 include "../autentificacion/validar_token.php";
 
 if (!isset($_COOKIE["token"])) {
