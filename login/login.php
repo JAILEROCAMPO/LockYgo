@@ -1,6 +1,7 @@
 <?php
-require '../autoload.php'; //cargamos la libreria JWT
+require '../autoload.php'; // Cargamos la librería JWT (si la usas)
 include "../conexion/dbpdo.php"; // Conexión a la base de datos
+include "../auth/token.php"; // Importamos la función para generar tokens
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
@@ -14,13 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($admin) {
-            if (password_verify($password, $admin['contrasena'])) {
-                $_SESSION["usuario"] = $admin["nombre"];
-                $_SESSION["rol"] = "admin";
-                header("Location: ../admin/index_admin.html");
-                exit();
-            }
+        if ($admin && password_verify($password, $admin['contrasena'])) {
+            $token = generarToken($admin["id"], "admin"); // Generar token
+            setcookie("token", $token, time() + 3600, "/", "", false, true); // Guardar el token en una cookie
+
+            header("Location: ../admin/index_admin.html");
+            exit();
         }
 
         // Buscar en la tabla de estudiantes
@@ -30,13 +30,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $estudiante = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($estudiante) {
-            if (password_verify($password, $estudiante['contrasena'])) {
-                $_SESSION["usuario"] = $estudiante["nombre"];
-                $_SESSION["rol"] = "estudiante";
-                header("Location: ../estudiante/index_estudiante.html");
-                exit();
-            }
+        if ($estudiante && password_verify($password, $estudiante['contrasena'])) {
+            $token = generarToken($estudiante["id"], "estudiante"); // Generar token
+            setcookie("token", $token, time() + 3600, "/", "", false, true); // Guardar el token en una cookie
+
+            header("Location: ../estudiante/index_estudiante.html");
+            exit();
         }
 
         // Si no coincide con ningún usuario
@@ -48,5 +47,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
 ?>
