@@ -1,6 +1,6 @@
 <?php
-require '../autoload.php'; //cargamos la libreria JWT
-include "../conexion/dbpdo.php"; // Conexión a la base de datos
+include "../conexion/dbpdo.php"; // Conexión a la BD
+include "../autentificacion/token.php"; // Archivo para generar el token
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
@@ -14,13 +14,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($admin) {
-            if (password_verify($password, $admin['contrasena'])) {
-                $_SESSION["usuario"] = $admin["nombre"];
-                $_SESSION["rol"] = "admin";
-                header("Location: ../admin/index_admin.html");
-                exit();
-            }
+        if ($admin && password_verify($password, $admin['contrasena'])) {
+            $token = generarToken($admin["id"], "admin");
+
+            // Guardar token en cookie (httpOnly y secure)
+            setcookie("token", $token, time() + 3600, "/", "", true, true);
+
+            echo "<script>window.location.href = '../admin/index_admin.html';</script>";
+            exit();
         }
 
         // Buscar en la tabla de estudiantes
@@ -30,23 +31,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $estudiante = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($estudiante) {
-            if (password_verify($password, $estudiante['contrasena'])) {
-                $_SESSION["usuario"] = $estudiante["nombre"];
-                $_SESSION["rol"] = "estudiante";
-                header("Location: ../estudiante/index_estudiante.html");
-                exit();
-            }
+        if ($estudiante && password_verify($password, $estudiante['contrasena'])) {
+            $token = generarToken($estudiante["id"], "estudiante");
+
+            // Guardar token en cookie (httpOnly y secure)
+            setcookie("token", $token, time() + 3600, "/", "", true, true);
+
+            echo "<script>window.location.href = '../estudiante/index_estudiante.html';</script>";
+            exit();
         }
 
-        // Si no coincide con ningún usuario
-        echo "<script>alert('Datos ingresados incorrectos'); window.history.back();</script>";
+        echo "<script>alert('Credenciales incorrectas'); window.history.back();</script>";
 
     } catch (PDOException $e) {
-        echo "Error en la conexión: " . $e->getMessage();
+        echo "<script>alert('Error en la conexión: " . $e->getMessage() . "');</script>";
     }
 }
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 ?>
