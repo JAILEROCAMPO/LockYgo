@@ -1,5 +1,5 @@
 <?php
-session_start();
+require '../autoload.php'; //cargamos la libreria JWT
 include "../conexion/dbpdo.php"; // Conexión a la base de datos
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
