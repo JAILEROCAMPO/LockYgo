@@ -1,11 +1,16 @@
 <?php
-include "../conexion/dbpdo.php";
-include "../autentificacion/validar_token.php";
+session_start();
 
-if (!isset($_COOKIE["token"])) {
-    header("Location: ../login/inicioSesion_usuario.html");
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION["autenticado"])) {
+    header("Location: ../login/inicioSesion_usuario.html"); // Redirigir a login si no está autenticado
     exit();
 }
+
+// Obtener el nombre del usuario de la sesión
+$nombreUsuario = $_SESSION["nombre"];
+
+include "../conexion/dbpdo.php";
 
 // Eliminar administrador si se solicita
 if (isset($_GET['eliminar'])) {

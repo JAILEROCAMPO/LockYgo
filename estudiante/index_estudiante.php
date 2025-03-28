@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION["autenticado"])) {
+    header("Location: ../login/inicioSesion_usuario.html"); // Redirigir a login si no está autenticado
+    exit();
+}
+
+// Obtener el nombre del usuario de la sesión
+$nombreUsuario = $_SESSION["nombre"];
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -24,9 +36,10 @@
         </ul>
         <div class="user-icon"> 
             <a href="../login/inicioSesion_usuario.html"><img src="../Imagenes/perfil.png" alt="Perfil"></a>
-            <a href="../login/logout.php" class="cerrar"><img src="/Imagenes/cerrar.png" alt="Cerrar Sesion"></a>
+            <a href="../login/logout.php" class="cerrar"><img src="../Imagenes/cerrar.png" alt="Cerrar Sesion"></a>
         </div>
 
     </nav>
+    <h1>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?>!</h1>
 </body>
 </html>

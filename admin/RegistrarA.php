@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION["autenticado"])) {
+    header("Location: ../login/inicioSesion_usuario.html"); // Redirigir a login si no está autenticado
+    exit();
+}
+// Obtener el nombre del usuario de la sesión
+$nombreUsuario = $_SESSION["nombre"];
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -102,7 +113,7 @@
                 });
             </script>
             
-            <p>Registrar Estudiante <a href="RegistrarE.html">Aquí</a></p>
+        
             
 
         </div>

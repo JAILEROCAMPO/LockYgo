@@ -1,19 +1,26 @@
 <?php
-include '../conexion/dbpdo.php';
-include "../autentificacion/validar_token.php";
+session_start();
 
-if (!isset($_COOKIE["token"])) {
-    header("Location: ../login/inicioSesion_usuario.html");
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION["autenticado"])) {
+    header("Location: ../login/inicioSesion_usuario.html"); // Redirigir a login si no está autenticado
     exit();
 }
-
+// Obtener el nombre del usuario de la sesión
+$nombreUsuario = $_SESSION["nombre"];
+include '../conexion/dbpdo.php';
 
 // Obtener casilleros
-$query = "SELECT * FROM casilleros";
-$result = mysqli_query($conn, $query);
-$casilleros = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $casilleros[$row['numero']] = $row['estado'];
+try {
+    $query = "SELECT * FROM casilleros";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $casilleros = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $casilleros[$row['numero']] = $row['estado'];
+    }
+} catch (PDOException $e) {
+    die("Error al obtener casilleros: " . $e->getMessage());
 }
 
 // Definir bloques de casilleros

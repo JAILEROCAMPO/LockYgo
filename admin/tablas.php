@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION["autenticado"])) {
+    header("Location: ../login/inicioSesion_usuario.html"); // Redirigir a login si no está autenticado
+    exit();
+}
+
+// Obtener el nombre del usuario de la sesión
+$nombreUsuario = $_SESSION["nombre"];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -23,10 +36,18 @@
             <li><a href="registros.html">Registrar</a></li>
             <li><a href="../Pagina Reserva/bienvenida.html">Casilleros</a></li>
         </ul>
-        <div class="user-icon"> 
-            <a href="../login/logout.php" class="cerrar"><img src="/Imagenes/cerrar.png" alt="Cerrar Sesion"></a>
-        </div>
     </nav>
+
+    <section>
+        <div>
+                <button class="btn bloque" onclick="location.href='../estudiante/tabla_estudiantes.php'">TABLA USUARIOS</button>
+                <button class="btn bloque" onclick="location.href='tabla_admin.php'">TABLA ADMINISTRADORES</button>
+                <button class="btn bloque" onclick="location.href='casilleros.html'">TABLA CASILLEROS</button>
+                <button class="btn bloque" onclick="location.href='reservas.html'">TABLA RESERVAS</button>
+            </button>
+        </div>
+        
+    </section>
 
         <!-- Pie de página -->
         <footer>
@@ -50,7 +71,6 @@
     
             <p><a href="../Contactenos/privacidad.html">Aviso de privacidad</a></p>
         </footer>
-    <!-- Incluir el script de validación del token -->
-    <script src="../autentificacion/validar_sesion.js"></script>
+        <script src="../autentificacion/validar_sesion.js"></script>
 </body>
 </html>

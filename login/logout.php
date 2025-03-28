@@ -1,5 +1,7 @@
 <?php
-setcookie("token", "", time() - 3600, "/"); // Eliminar token
-header("Location: inicioSesion_usuario.html");
+session_start();
+session_unset();
+session_destroy();
+header("Location: ../login/inicioSesion_Usuario.html");
 exit();
 ?>
