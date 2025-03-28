@@ -79,22 +79,26 @@ $bloques = [
 <body>
 
     <nav class="navbar">
-        <div class="logo">
-            <img src="../Imagenes/image-removebg-preview.png" alt="Lock&Go">
-            <span class="logo-text">Lock&Go</span>
-        </div>
-        <ul class="menu">
-            <li><a href="../estudiante/index_estudiante.php">Inicio</a></li>
-            <li><a href="bienvenida.php">Casilleros</a></li>
-            <li><a href="../contactenos/contacto.html">Contacto</a></li>
-        </ul>
-        <div class="user-icon">
-            <a href="../login/inicioSesion_usuario.html"><img src="../Imagenes/perfil.png" alt="Perfil"></a>
-        </div>
+            <div class="logo">
+                <img src="../Imagenes/image-removebg-preview.png" alt="Lock&Go">
+                <span class="logo-text">Lock&Go</span>
+            </div>
+            <ul class="menu">
+                <li><a href="../estudiante/index_estudiante.php">Inicio</a></li>
+                <li><a href="../Pagina Reserva/bienvenida.php">Casilleros</a></li>
+                <li><a href="../contactenos/contacto.html">Contacto</a></li>
+            </ul>
+            <div class="user-icon"> 
+                <a href="editar_perfil.php"><img src="../Imagenes/perfil.png" alt="Perfil"></a>
+                <a href="../login/logout.php" class="cerrar"><img src="../Imagenes/cerrar.png" alt="Cerrar Sesion"></a>
+            </div>
+
     </nav>
 
+
     <section class="tittle-welcome">
-        <h2>Por favor selecciona el casillero que mejor se te facilite</h2>
+        <h1></h1>
+        <h2>!<?php echo htmlspecialchars(ucfirst($nombreUsuario)); ?>! <br>Por favor selecciona el casillero que mejor se te facilite</h2>
     </section>
 
     <div class="contenedor-botones">
