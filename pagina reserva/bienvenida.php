@@ -1,17 +1,15 @@
 <?php
 session_start();
 
-// Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION["autenticado"])) {
-    header("Location: ../login/inicioSesion_usuario.html"); // Redirigir a login si no está autenticado
+    header("Location: ../login/inicioSesion_usuario.html");
     exit();
 }
-// Obtener el nombre del usuario de la sesión
+
 $nombreUsuario = $_SESSION["nombre"];
 $idUsuario = $_SESSION["id_usuario"];
 include '../conexion/dbpdo.php';
 
-// Obtener casilleros
 try {
     $query = "SELECT * FROM casilleros";
     $stmt = $conn->prepare($query);
@@ -24,7 +22,6 @@ try {
     die("Error al obtener casilleros: " . $e->getMessage());
 }
 
-// Definir bloques de casilleros
 $bloques = [
     'A' => range(1, 120),
     'B' => range(121, 269),
@@ -45,7 +42,14 @@ $bloques = [
         .contenedor-botones { text-align: center; margin-bottom: 20px; }
         .btn { margin: 5px; padding: 10px 15px; cursor: pointer; }
         .contenedor-cuadricula {
-            display: grid; grid-template-columns: repeat(10, 50px); gap: 10px; justify-content: center; margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .fila {
+            display: flex;
+            gap: 10px;
         }
         .casillero {
             width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
@@ -53,142 +57,43 @@ $bloques = [
         }
         .libre { background-color: green; }
         .ocupado { background-color: red; cursor: not-allowed; }
-        
-        /* Botón de liberar en un costado */
-        .contenedor-liberar {
-            position: fixed;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-            padding: 20px;
-            background: #f8f9fa;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            display: none;
-        }
-        .btn-liberar {
-            background-color: orange;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            width: 100%;
-        }
     </style>
 </head>
 <body>
-
-    <nav class="navbar">
-        <div class="logo">
-            <img src="../Imagenes/image-removebg-preview.png" alt="Lock&Go">
-            <span class="logo-text">Lock&Go</span>
-        </div>
-        <ul class="menu">
-            <li><a href="../Pagina index/index.html">Inicio</a></li>
-            <li><a href="bienvenida.php">Casilleros</a></li>
-            <li><a href="../contactenos/contacto.html">Contacto</a></li>
-        </ul>
-        <div class="user-icon">
-            <a href="../login/inicioSesion_usuario.html"><img src="../Imagenes/perfil.png" alt="Perfil"></a>
-        </div>
-    </nav>
-
-    <section class="tittle-welcome">
-        <h2>Hola, <?php echo htmlspecialchars(ucfirst($nombreUsuario)); ?> Selecciona un casillero</h2>
-    </section>
-
     <div class="contenedor-botones">
         <?php foreach ($bloques as $bloque => $numeros) : ?>
             <button class="btn bloque" onclick="mostrarCasilleros('<?php echo $bloque; ?>')">Bloque <?php echo $bloque; ?></button>
         <?php endforeach; ?>
     </div>
 
-    <div class="contenedor-cuadricula" id="cuadricula">
+    <div class="contenedor-cuadricula">
         <?php foreach ($bloques as $bloque => $numeros) : ?>
             <div id="bloque-<?php echo $bloque; ?>" style="display: none;">
-                <?php foreach ($numeros as $num) :
+                <?php 
+                $contador = 0;
+                foreach ($numeros as $num) :
+                    if ($contador % 10 == 0) echo '<div class="fila">';
                     $estado = isset($casilleros[$num]) ? $casilleros[$num] : 'libre';
                     $clase = ($estado == 'libre') ? 'libre' : 'ocupado';
                 ?>
                     <div class="casillero <?php echo $clase; ?>" data-id="<?php echo $num; ?>" onclick="mostrarVentana(this)">
                         <?php echo $num; ?>
                     </div>
-                <?php endforeach; ?>
+                <?php 
+                    $contador++;
+                    if ($contador % 10 == 0) echo '</div>';
+                endforeach; 
+                if ($contador % 10 != 0) echo '</div>'; // Cierra la última fila si no es múltiplo de 10
+                ?>
             </div>
         <?php endforeach; ?>
-    </div>
-
-    <!-- Botón liberar en un costado -->
-    <div class="contenedor-liberar" id="contenedor-liberar">
-        <h4>Casillero reservado:</h4>
-        <p id="casilleroReservado">Ninguno</p>
-        <button class="btn-liberar" id="btnLiberar" style="display: none;">Liberar</button>
-    </div>
-
-    <div id="ventanaEmergente" class="ventana" style="display: none;">
-        <div class="contenido-ventana">
-            <h3>Reservar Casillero</h3>
-            <p>¿Deseas reservar el casillero <span id="numeroCasillero"></span>?</p>
-            <button id="reservarButton">Reservar</button>
-            <button onclick="cerrarVentana()">Cerrar</button>
-        </div>
     </div>
 
     <script>
         function mostrarCasilleros(bloque) {
             document.querySelectorAll('.contenedor-cuadricula > div').forEach(div => div.style.display = 'none');
-            document.getElementById('bloque-' + bloque).style.display = 'grid';
+            document.getElementById('bloque-' + bloque).style.display = 'block';
         }
-
-        function mostrarVentana(casillero) {
-            if (casillero.classList.contains('ocupado')) return;
-            let numero = casillero.textContent;
-            document.getElementById('numeroCasillero').textContent = numero;
-            document.getElementById('reservarButton').setAttribute('data-id', casillero.dataset.id);
-            document.getElementById('ventanaEmergente').style.display = 'block';
-        }
-
-        function cerrarVentana() {
-            document.getElementById('ventanaEmergente').style.display = 'none';
-        }
-
-        document.getElementById('reservarButton').addEventListener('click', function() {
-            let id = this.getAttribute('data-id');
-            fetch('reservar.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'id=' + id
-            }).then(response => response.text())
-              .then(data => {
-                if (data === 'ok') {
-                    let casillero = document.querySelector(`[data-id='${id}']`);
-                    casillero.classList.remove('libre');
-                    casillero.classList.add('ocupado');
-                    cerrarVentana();
-
-                    // Mostrar botón "Liberar"
-                    document.getElementById('casilleroReservado').textContent = id;
-                    document.getElementById('btnLiberar').setAttribute('data-id', id);
-                    document.getElementById('contenedor-liberar').style.display = 'block';
-                    document.getElementById('btnLiberar').style.display = 'block';
-                }
-            });
-        });
-
-        document.getElementById('btnLiberar').addEventListener('click', function() {
-            let id = this.getAttribute('data-id');
-            fetch('liberar.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'id=' + id
-            }).then(() => {
-                document.querySelector(`[data-id='${id}']`).classList.remove('ocupado');
-                document.querySelector(`[data-id='${id}']`).classList.add('libre');
-                document.getElementById('contenedor-liberar').style.display = 'none';
-            });
-        });
     </script>
-
 </body>
 </html>
