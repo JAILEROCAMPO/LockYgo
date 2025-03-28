@@ -73,10 +73,13 @@ $stmt = $conn->query($sql);
             <span class="logo-text">Lock&Go</span>
         </div>
         <ul class="menu">
-            <li><a href="../Pagina index/index.html">Inicio</a></li>
-            <li><a href="../Pagina Reserva/bienvenida.html">Casilleros</a></li>
-            <li><a href="../contactenos/contacto.html">Contacto</a></li>
-        </ul>
+            <li><a href="index_admin.php">Inicio</a></li>
+            <li><a href="tablas.php">Tablas</a></li>
+            <li><a href="RegistrarA.php">Registrar</a></li>
+        </ul>     
+        <div class="user-icon"> 
+            <a href="../login/logout.php" class="cerrar"><img src="../Imagenes/cerrar.png" alt="Cerrar Sesión"></a>
+        </div>
     </nav>
 
     <h2>Lista de Administradores</h2>

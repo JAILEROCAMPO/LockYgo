@@ -33,14 +33,13 @@ $nombreUsuario = $_SESSION["nombre"];
             <li><a href="index_admin.php">Inicio</a></li>
             <li><a href="tablas.php">Tablas</a></li>
             <li><a href="RegistrarA.php">Registrar</a></li>
-            <li><a href="../Pagina Reserva/bienvenida.php">Casilleros</a></li>
-        </ul>
+        </ul>     
         <div class="user-icon"> 
             <a href="../login/logout.php" class="cerrar"><img src="../Imagenes/cerrar.png" alt="Cerrar Sesión"></a>
         </div>
     </nav>
 
-    <h1>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?>!</h1>
+    <h1>Bienvenido, <?php echo htmlspecialchars(ucfirst($nombreUsuario)); ?>!</h1>
 
     <!-- Pie de página -->
     <footer>

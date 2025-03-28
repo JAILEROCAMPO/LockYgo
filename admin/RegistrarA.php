@@ -29,13 +29,15 @@ $nombreUsuario = $_SESSION["nombre"];
             <span class="logo-text">Lock&Go</span>
         </div>
         <ul class="menu">
-            <li><a href="index_admin.html">Inicio</a></li>
-            <li><a href="tablas.html">tablas</a></li>
-            <li><a href="registros.html">Registrar</a></li>
-            <li><a href="../Pagina Reserva/bienvenida.html">Casilleros</a></li>
-        </ul>
-    </nav>
+            <li><a href="index_admin.php">Inicio</a></li>
+            <li><a href="tablas.php">Tablas</a></li>
+            <li><a href="RegistrarA.php">Registrar</a></li>
 
+        </ul>     
+        <div class="user-icon"> 
+            <a href="../login/logout.php" class="cerrar"><img src="../Imagenes/cerrar.png" alt="Cerrar Sesión"></a>
+        </div>
+    </nav>
     <div class="register-page">
         <div class="register-container">
             <h2>Registrar Administrador</h2>
