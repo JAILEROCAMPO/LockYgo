@@ -20,7 +20,7 @@ $nombreUsuario = $_SESSION["nombre"];
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-        <link rel="icon" type="image/png" href="../Imagenes/image-removebg-preview.png">
+        <link rel="icon" type="image/png" href="../../Imagenes/image-removebg-preview.png">
     
     </head>
 <body>
@@ -30,7 +30,7 @@ $nombreUsuario = $_SESSION["nombre"];
             <span class="logo-text">Lock&Go</span>
         </div>
         <ul class="menu">
-            <li><a href="../Pagina index/index.html">Inicio</a></li>
+            <li><a href="index_estudiante.php">Inicio</a></li>
             <li><a href="../Pagina Reserva/bienvenida.php">Casilleros</a></li>
             <li><a href="../contactenos/contacto.html">Contacto</a></li>
         </ul>
@@ -40,8 +40,31 @@ $nombreUsuario = $_SESSION["nombre"];
         </div>
 
     </nav>
-    <h1>Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?>!</h1>
-     <!-- Pie de página -->
+    <header class="hero">
+    <h1>Bienvenido, <?php echo htmlspecialchars(ucfirst($nombreUsuario)); ?>!</h1>
+        <h1>Reserva tu casillero fácilmente</h1>
+        <p>Accede a un espacio seguro para guardar tus pertenencias en el SENA.</p>
+        <a href="../pagina reserva/bienvenida.php" class="btn">Empezar</a>
+    </header>
+    <section class="features">
+        <div class="feature">
+            <img src="../Imagenes/security.png" alt="Seguridad">
+            <h2>Seguridad</h2>
+            <p>Tus pertenencias estarán protegidas en todo momento.</p>
+        </div>
+        <div class="feature">
+            <img src="../Imagenes/accesibility.png" alt="Accesibilidad">
+            <h2>Accesibilidad</h2>
+            <p>Reserva y administra tu casillero desde cualquier dispositivo.</p>
+        </div>
+        <div class="feature">
+            <img src="../Imagenes/check.png" alt="Facilidad de uso">
+            <h2>Facilidad</h2>
+            <p>Proceso rápido y sencillo para obtener tu casillero.</p>
+        </div>
+    </section>
+
+    <!-- Pie de página -->
     <footer>
         <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica (CENIGRAF) - Regional Distrito Capital.</p>
         <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
@@ -61,7 +84,8 @@ $nombreUsuario = $_SESSION["nombre"];
             </a>
         </div>
 
-        <p><a href="../Contactenos/privacidad.html">Aviso de privacidad</a></p>
+        <p><a href="Contactenos/privacidad.html">Aviso de privacidad</a></p>
     </footer>
+</body>
 </body>
 </html>

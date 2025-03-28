@@ -84,7 +84,7 @@ $bloques = [
             <span class="logo-text">Lock&Go</span>
         </div>
         <ul class="menu">
-            <li><a href="../Pagina index/index.html">Inicio</a></li>
+            <li><a href="../estudiante/index_estudiante.php">Inicio</a></li>
             <li><a href="bienvenida.php">Casilleros</a></li>
             <li><a href="../contactenos/contacto.html">Contacto</a></li>
         </ul>

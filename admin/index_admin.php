@@ -30,7 +30,7 @@ $nombreUsuario = $_SESSION["nombre"];
             <span class="logo-text">Lock&Go</span>
         </div>
         <ul class="menu">
-            <li><a href="index_admin.php">Inicio</a></li>
+            <li><a href="../index.html">Inicio</a></li>
             <li><a href="tablas.php">Tablas</a></li>
             <li><a href="RegistrarA.php">Registrar</a></li>
         </ul>     
