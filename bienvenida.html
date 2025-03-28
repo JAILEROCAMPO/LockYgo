@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lock&Go - Reserva de Casilleros</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../Imagenes/image-removebg-preview.png" alt="Lock&Go">
+            <span class="logo-text">Lock&Go</span>
+        </div>
+        <ul class="menu">
+            <li><a href="../Pagina index/index.html">Inicio</a></li>
+            <li><a href="../Pagina Reserva/bienvenida.html">Casilleros</a></li>
+            <li><a href="../contactenos/contacto.html">Contacto</a></li>
+        </ul>
+        <div class="user-icon">
+            <a href="../login/inicioSesion_usuario.html"><img src="../Imagenes/perfil.png" alt="Perfil"></a>
+        </div>
+    </nav>
+
+    <section class="tittle-welcome">
+        <h2>Por favor selecciona el casillero que mejor se te facilite</h2>
+    </section>
+
+    <!-- Contenedor de botones para bloques -->
+    <section class="contenedor-botones">
+        <button class="btn bloque" data-bloque="A">Bloque A</button>
+        <button class="btn bloque" data-bloque="B">Bloque B</button>
+        <button class="btn bloque" data-bloque="C">Bloque C</button>
+        <button class="btn bloque" data-bloque="D">Bloque D</button>
+        <button class="btn bloque" data-bloque="E">Bloque E</button>
+    </section>
+
+    <!-- Cuadrícula donde se mostrarán los casilleros -->
+    <div class="contenedor-cuadricula" id="cuadricula"></div>
+
+    <!-- Ventana emergente para la reserva de casillero -->
+    <div id="ventanaEmergente" class="ventana">
+        <div class="contenido-ventana">
+            <h3>Reservar Casillero</h3>
+            <p>¿Deseas reservar el casillero <span id="numeroCasillero"></span>?</p>
+            <button id="reservarButton">Reservar Casillero</button>
+            <button id="cerrarButton" onclick="cerrarVentanaEmergente()">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Imagen de mapa (si se desea mostrar) -->
+    <div class="gift">
+        <img src="../Imagenes/gitmapa.gif" alt="planos" class="mapa1">
+    </div>
+
+    <footer>
+        <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica (CENIGRAF) - Regional Distrito Capital.</p>
+        <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
+        <p>Atención telefónica: Lunes a viernes 7:00 a.m. a 7:00 p.m. - Sábados 8:00 a.m. a 1:00 p.m.</p>
+        <p>Línea de atención al ciudadano: Bogotá +(57) 601 7366060 - Línea gratuita: 018000 910270</p>
+        <p>Contacto: <a href="mailto:servicioalciudadano@sena.edu.co">servicioalciudadano@sena.edu.co</a></p>
+
+        <div class="social-icons">
+            <a href="https://www.facebook.com/SENADistritoCapital/" target="_blank">
+                <img src="../Imagenes/face_logo.png" alt="Facebook">
+            </a>
+            <a href="https://x.com/SENAComunica" target="_blank">
+                <img src="../Imagenes/tw_logo.png" alt="Twitter">
+            </a>
+            <a href="https://www.instagram.com/senacomunica/" target="_blank">
+                <img src="../Imagenes/insta_logo.png" alt="Instagram">
+            </a>
+        </div>
+        <p><a href="../Contactenos/privacidad.html">Aviso de privacidad</a></p>
+    </footer>
+
+    <!-- Script JavaScript para la interacción de la página -->
+    <script>
+        // Manejadores de eventos para los botones de los bloques
+        document.querySelectorAll('.btn.bloque').forEach(button => {
+            button.addEventListener('click', function () {
+                const bloque = this.getAttribute('data-bloque');
+                const cuadricula = document.getElementById('cuadricula');
+                cuadricula.innerHTML = ''; // Limpiar la cuadrícula antes de llenarla
+
+                let numeros = [];
+
+                // Asignamos los rangos correspondientes a cada bloque
+                if (bloque === 'A') {
+                    numeros = Array.from({ length: 120 }, (_, i) => i + 1); // De 1 a 120
+                } else if (bloque === 'B') {
+                    numeros = Array.from({ length: 149 }, (_, i) => i + 121); // 121 a 269
+                } else if (bloque === 'C') {
+                    numeros = [
+                        ...Array.from({ length: 15 }, (_, i) => i + 270), // de 270 a 284
+                        ...Array.from({ length: 7 }, (_, i) => i + 304), // de 304 a 310
+                        ...Array.from({ length: 11 }, (_, i) => i + 315), // 315 a 325
+                        ...Array.from({ length: 11 }, (_, i) => i + 330), // 330 a 340
+                    ];
+                } else if (bloque === 'D') {
+                    numeros = [
+                        ...Array.from({ length: 15 }, (_, i) => i + 285), // 285 a 299
+                        ...Array.from({ length: 75 }, (_, i) => i + 360), // 360 a 434
+                    ];
+                } else if (bloque === 'E') {
+                    numeros = Array.from({ length: 41 }, (_, i) => i + 435); // de 435 a 475
+                }
+
+                // Llamamos la cuadrícula con los números
+                numeros.forEach(num => {
+                    const celda = document.createElement('div');
+                    celda.classList.add('celda');
+                    celda.textContent = num;
+
+                    // Agregar un evento de clic a cada casillero
+                    celda.addEventListener('click', function () {
+                        mostrarVentanaEmergente(num);
+                    });
+
+                    cuadricula.appendChild(celda);
+                });
+
+                // Alternar la visibilidad de la cuadrícula usando la clase 'visible'
+                cuadricula.classList.toggle('visible');
+            });
+        });
+
+        // Función para mostrar la ventana emergente para confirmar la reserva
+        function mostrarVentanaEmergente(numCasillero) {
+            const ventana = document.getElementById('ventanaEmergente');
+            const numeroCasillero = document.getElementById('numeroCasillero');
+            numeroCasillero.textContent = numCasillero;
+
+            // Mostrar la ventana emergente
+            ventana.style.display = 'flex';
+
+            // Remover eventos previos para evitar acumulación
+            const reservarButton = document.getElementById('reservarButton');
+            const nuevoBoton = reservarButton.cloneNode(true);
+            reservarButton.parentNode.replaceChild(nuevoBoton, reservarButton);
+
+            // Agregar nuevo evento al botón de reservar
+            nuevoBoton.addEventListener('click', function () {
+                reservarCasillero(numCasillero);
+            });
+        }
+
+        // Función para cerrar la ventana emergente
+        function cerrarVentanaEmergente() {
+            const ventana = document.getElementById('ventanaEmergente');
+            if (ventana) {
+                ventana.style.display = 'none';
+            }
+        }
+
+        // Función para enviar la solicitud de reserva al backend
+        function reservarCasillero(numCasillero) {
+            const estudianteId = 1; // Asegúrate de obtener el ID correcto
+
+            console.log("Reservando casillero:", numCasillero, "para estudiante:", estudianteId); // Para depuración
+
+            fetch('reservar_casillero.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `casillero_id=${numCasillero}&estudiante_id=${estudianteId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Respuesta del servidor:", data); // Ver si llega la respuesta
+                alert(data.message);
+                if (data.success) {
+                    actualizarCasilleroVisual(numCasillero);
+                    cerrarVentanaEmergente(); // Cerrar ventana después de reservar
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud:', error);
+                alert("Hubo un error al reservar el casillero.");
+            });
+        }
+
+        // Función para actualizar la interfaz
+        function actualizarCasilleroVisual(numCasillero) {
+            const casillero = document.querySelector(`.celda:contains('${numCasillero}')`);
+            if (casillero) {
+                casillero.classList.add('ocupado'); // Asegúrate de tener una clase CSS para estilos
+                casillero.onclick = null; // Deshabilitar el clic en casilleros ocupados
+            }
+        }
+
+        // Función para cargar los casilleros ocupados al inicio
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('obtener_casilleros_ocupados.php')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(numCasillero => {
+                        const casillero = document.querySelector(`.celda:contains('${numCasillero}')`);
+                        if (casillero) {
+                            casillero.classList.add('ocupado');
+                            casillero.onclick = null;
+                        }
+                    });
+                })
+                .catch(error => console.error('Error al cargar casilleros ocupados:', error));
+        });
+    </script>
+</body>
+
+</html>

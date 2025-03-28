@@ -8,6 +8,7 @@ if (!isset($_SESSION["autenticado"])) {
 }
 // Obtener el nombre del usuario de la sesión
 $nombreUsuario = $_SESSION["nombre"];
+$idUsuario = $_SESSION["id_usuario"];
 include '../conexion/dbpdo.php';
 
 // Obtener casilleros
@@ -94,7 +95,7 @@ $bloques = [
     </nav>
 
     <section class="tittle-welcome">
-        <h2>Por favor selecciona el casillero que mejor se te facilite</h2>
+        <h2>Hola, <?php echo htmlspecialchars(ucfirst($nombreUsuario)); ?> Selecciona un casillero</h2>
     </section>
 
     <div class="contenedor-botones">
