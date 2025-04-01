@@ -31,7 +31,7 @@ $nombreUsuario = $_SESSION["nombre"];
         </div>
         <ul class="menu">
             <li><a href="index_estudiante.php">Inicio</a></li>
-            <li><a href="../Pagina Reserva/bienvenida.php">Casilleros</a></li>
+            <li><a href="../Pagina Reserva/bienvenida.html">Casilleros</a></li>
             <li><a href="../contactenos/contacto.html">Contacto</a></li>
         </ul>
         <div class="user-icon"> 
