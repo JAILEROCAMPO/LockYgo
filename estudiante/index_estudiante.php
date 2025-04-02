@@ -9,6 +9,8 @@ if (!isset($_SESSION["autenticado"])) {
 
 // Obtener el nombre del usuario de la sesión
 $nombreUsuario = $_SESSION["nombre"];
+echo "ID del usuario autenticado: " . $_SESSION["id_usuario"];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
