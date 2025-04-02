@@ -7,45 +7,48 @@ include '../conexion/dbpdo.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservas en Tiempo Real</title>
+    <title>Reservas - Panel de Administrador</title>
     <link rel="stylesheet" href="../styles.css">
     <script>
-        function actualizarTabla() {
+        function cargarReservas() {
             fetch('obtener_reservas.php')
                 .then(response => response.text())
                 .then(data => {
-                    document.getElementById('tablaReservas').innerHTML = data;
+                    document.getElementById('tabla-reservas').innerHTML = data;
                 });
         }
 
-        setInterval(actualizarTabla, 5000);
-        window.onload = actualizarTabla;
+        function liberarCasillero(casilleroId) {
+            fetch('liberar_casillero.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'id=' + casilleroId
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                cargarReservas(); // Recargar la tabla después de liberar
+            });
+        }
+
+        setInterval(cargarReservas, 5000); // Actualiza cada 5 segundos
     </script>
 </head>
 <body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="admin_panel.php">Inicio</a></li>
-            <li><a href="#">Reservas</a></li>
-            <li><a href="logout.php">Cerrar Sesión</a></li>
-        </ul>
-    </nav>
-    
-    <section>
-        <h2>Casilleros Reservados</h2>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Programa de Formación</th>
-                    <th>Ficha</th>
-                    <th>Casillero</th>
-                </tr>
-            </thead>
-            <tbody id="tablaReservas">
-                <!-- Datos cargados dinámicamente -->
-            </tbody>
-        </table>
-    </section>
+    <h2>Reservas de Casilleros</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Programa de Formación</th>
+                <th>Número de Ficha</th>
+                <th>Casillero</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-reservas">
+            <!-- Se llenará con obtener_reservas.php -->
+        </tbody>
+    </table>
 </body>
 </html>
