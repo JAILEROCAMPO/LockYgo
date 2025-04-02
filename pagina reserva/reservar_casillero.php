@@ -18,6 +18,8 @@ try {
     $casillero_id = $_POST['casillero_id'];
     $estudiante_id = $_SESSION['id_usuario'];
 
+    $conn->beginTransaction();
+
     // Verificar si el estudiante ya tiene una reserva activa
     $query_check_reserva = "SELECT id FROM reservas WHERE estudiante_id = ? AND estado = 'Activa'";
     $stmt = $conn->prepare($query_check_reserva);
@@ -25,6 +27,7 @@ try {
     $reserva_existente = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($reserva_existente) {
+        $conn->rollBack();
         echo json_encode(['error' => 'Ya tienes una reserva activa']);
         exit();
     }
@@ -36,6 +39,7 @@ try {
     $casillero = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$casillero) {
+        $conn->rollBack();
         echo json_encode(['error' => 'El casillero no está disponible']);
         exit();
     }
@@ -45,8 +49,17 @@ try {
     $stmt = $conn->prepare($query_reserva);
     $stmt->execute([$estudiante_id, $casillero_id]);
 
+    // Actualizar el estado del casillero a 'ocupado'
+    $query_update_casillero = "UPDATE casilleros SET estado = 'ocupado' WHERE id = ?";
+    $stmt = $conn->prepare($query_update_casillero);
+    $stmt->execute([$casillero_id]);
+
+    $conn->commit();
+
     echo json_encode(['success' => 'Casillero reservado con éxito']);
 
 } catch (Exception $e) {
+    $conn->rollBack();
     echo json_encode(['error' => 'Error en la reserva: ' . $e->getMessage()]);
 }
+?>
