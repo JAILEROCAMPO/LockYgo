@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas en Tiempo Real</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Casilleros Reservados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre del Alumno</th>
+                <th>Programa de Formación</th>
+                <th>Número de Ficha</th>
+                <th>Número de Casillero</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-reservas">
+            <!-- Aquí se insertarán los datos dinámicamente -->
+        </tbody>
+    </table>
+
+    <script>
+        function actualizarReservas() {
+            fetch('obtener_reservas.php')
+                .then(response => response.json())
+                .then(data => {
+                    let tabla = document.getElementById('tabla-reservas');
+                    tabla.innerHTML = '';
+                    data.forEach(reserva => {
+                        let fila = `<tr>
+                                        <td>${reserva.nombre}</td>
+                                        <td>${reserva.programa_formacion}</td>
+                                        <td>${reserva.ficha}</td>
+                                        <td>${reserva.numero_casillero}</td>
+                                    </tr>`;
+                        tabla.innerHTML += fila;
+                    });
+                });
+        }
+
+        setInterval(actualizarReservas, 5000); // Actualiza cada 5 segundos
+        actualizarReservas();
+    </script>
+</body>
+</html>
