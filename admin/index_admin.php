@@ -33,6 +33,8 @@ $nombreUsuario = $_SESSION["nombre"];
             <li><a href="../index.html">Inicio</a></li>
             <li><a href="tablas.php">Tablas</a></li>
             <li><a href="RegistrarA.php">Registrar</a></li>
+            <li><a href="ReservasRT.php">Casilleros reservados</a></li>
+
         </ul>     
         <div class="user-icon"> 
             <a href="../login/logout.php" class="cerrar"><img src="../Imagenes/cerrar.png" alt="Cerrar Sesión"></a>

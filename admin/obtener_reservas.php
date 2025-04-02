@@ -1,20 +1,24 @@
 <?php
-include '../conexion/db.php';
+include '../conexion/dbpdo.php';
 
-header('Content-Type: application/json');
+$query = "SELECT e.nombre, e.programa_formacion, e.ficha, c.numero 
+          FROM reservas r
+          INNER JOIN estudiantes e ON r.estudiante_id = e.id
+          INNER JOIN casilleros c ON r.casillero_id = c.id
+          WHERE c.estado = 'ocupado'";
 
-try {
-    $query = "SELECT e.nombre, e.apellidos, e.programa_formacion, e.ficha, c.numero AS casillero
-              FROM reservas r
-              INNER JOIN estudiantes e ON r.id_estudiante = e.id
-              INNER JOIN casilleros c ON r.id_casillero = c.id
-              WHERE c.estado = 'ocupado'";
-    
-    $stmt = $conn->prepare($query);
-    $stmt->execute();
-    $reservas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    echo json_encode($reservas);
-} catch (PDOException $e) {
-    echo json_encode(["error" => "Error al obtener las reservas: " . $e->getMessage()]);
+$stmt = $conn->prepare($query);
+$stmt->execute();
+
+$salida = "";
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $salida .= "<tr>
+                    <td>{$row['nombre']}</td>
+                    <td>{$row['programa_formacion']}</td>
+                    <td>{$row['ficha']}</td>
+                    <td>{$row['numero']}</td>
+                </tr>";
 }
+
+echo $salida ?: "<tr><td colspan='4'>No hay reservas activas</td></tr>";
+?>
