@@ -487,13 +487,14 @@ footer a:hover {
     border: 1px solid #e66b00;
 }
 .celda:hover{
-    background-color: #e66b00;
+    background-color: ;
     border-color: #ffffff;
 }
 .ocupado {
-    background-color: red;
+    background-color: #e66b00;
     pointer-events: none;
     opacity: 0.6;
+    border-color: white;
 }
 
 /* Estilos para la ventana emergente */

@@ -143,6 +143,5 @@ $nombreUsuario = $_SESSION["nombre"];
     
             <p><a href="../Contactenos/privacidad.html">Aviso de privacidad</a></p>
         </footer>
-        <script src="../autentificacion/validar_sesion.js"></script>
 </body>
 </html>

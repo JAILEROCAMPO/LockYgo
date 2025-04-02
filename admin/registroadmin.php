@@ -1,19 +1,16 @@
 <?php
 session_start();
-if (!isset($_SESSION["autenticado"]) || $_SESSION["autenticado"] !== true) {
-    header("Location: ../login/inicioSesion_Usuario.html"); // Redirigir si no está autenticado
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION["autenticado"])) {
+    header("Location: ../login/inicioSesion_usuario.html"); // Redirigir a login si no está autenticado
     exit();
 }
 
-// Obtener el nombre del usuario logueado
+// Obtener el nombre del usuario de la sesión
 $nombreUsuario = $_SESSION["nombre"];
+
 include "../conexion/dbpdo.php";
-
-if (!isset($_COOKIE["token"])) {
-    header("Location: ../login/inicioSesion_usuario.html");
-    exit();
-}
-
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $usuario = $_POST["tipo_usuario"];
