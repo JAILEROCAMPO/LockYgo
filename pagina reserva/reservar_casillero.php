@@ -1,27 +1,52 @@
 <?php
-// Iniciar la sesión y verificar si el formulario está siendo enviado
 session_start();
 header('Content-Type: application/json');
 
-// Simulando la reserva exitosa (esto debería interactuar con la base de datos)
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Simulando datos
-    $casillero_id = $_POST['casillero_id']; // El ID del casillero
-    $estudiante_id = $_POST['estudiante_id']; // El ID del estudiante
+include "../conexion/dbpdo.php";
 
-    // Aquí deberías incluir la lógica para reservar el casillero en la base de datos.
-    // Ejemplo de lógica:
-    // 1. Verificar si el casillero está disponible.
-    // 2. Reservarlo para el estudiante.
-    
-    // Suponiendo que la reserva fue exitosa:
-    $response = [
-        'success' => 'El casillero ha sido reservado correctamente.',
-        'casillero_id' => $casillero_id // ID del casillero reservado
-    ];
-    echo json_encode($response);
-} else {
-    // Si no es un POST, devolvemos un error
-    echo json_encode(['error' => 'Método no permitido']);
+try {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo json_encode(['error' => 'Método no permitido']);
+        exit();
+    }
+
+    if (!isset($_POST['casillero_id']) || !isset($_SESSION['id_usuario'])) {
+        echo json_encode(['error' => 'Faltan parámetros']);
+        exit();
+    }
+
+    $casillero_id = $_POST['casillero_id'];
+    $estudiante_id = $_SESSION['id_usuario'];
+
+    // Verificar si el estudiante ya tiene una reserva activa
+    $query_check_reserva = "SELECT id FROM reservas WHERE estudiante_id = ? AND estado = 'Activa'";
+    $stmt = $conn->prepare($query_check_reserva);
+    $stmt->execute([$estudiante_id]);
+    $reserva_existente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($reserva_existente) {
+        echo json_encode(['error' => 'Ya tienes una reserva activa']);
+        exit();
+    }
+
+    // Verificar si el casillero está disponible
+    $query_check_casillero = "SELECT estado FROM casilleros WHERE id = ? AND estado = 'libre'";
+    $stmt = $conn->prepare($query_check_casillero);
+    $stmt->execute([$casillero_id]);
+    $casillero = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$casillero) {
+        echo json_encode(['error' => 'El casillero no está disponible']);
+        exit();
+    }
+
+    // Insertar la nueva reserva
+    $query_reserva = "INSERT INTO reservas (estudiante_id, casillero_id, estado) VALUES (?, ?, 'Activa')";
+    $stmt = $conn->prepare($query_reserva);
+    $stmt->execute([$estudiante_id, $casillero_id]);
+
+    echo json_encode(['success' => 'Casillero reservado con éxito']);
+
+} catch (Exception $e) {
+    echo json_encode(['error' => 'Error en la reserva: ' . $e->getMessage()]);
 }
-?>

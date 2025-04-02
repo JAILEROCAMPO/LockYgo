@@ -28,7 +28,6 @@
         <h2>Por favor selecciona el casillero que mejor se te facilite</h2>
     </section>
 
-    <!-- Contenedor de botones para bloques -->
     <section class="contenedor-botones">
         <button class="btn bloque" data-bloque="A">Bloque A</button>
         <button class="btn bloque" data-bloque="B">Bloque B</button>
@@ -37,120 +36,123 @@
         <button class="btn bloque" data-bloque="E">Bloque E</button>
     </section>
 
-    <!-- Cuadrícula donde se mostrarán los casilleros -->
     <div class="contenedor-cuadricula" id="cuadricula"></div>
 
-    <!-- Ventana emergente para la reserva de casillero -->
+    <!-- Ventana emergente para la reserva -->
     <div id="ventanaEmergente" class="ventana">
         <div class="contenido-ventana">
             <h3>Reservar Casillero</h3>
             <p>¿Deseas reservar el casillero <span id="numeroCasillero"></span>?</p>
             <form id="formReservar">
                 <input type="hidden" id="casilleroIdInput" name="casillero_id">
-                <input type="hidden" id="estudianteIdInput" name="estudiante_id" value="1"> <!-- Cambia este valor por el ID correcto -->
+                <input type="hidden" id="estudianteIdInput" name="estudiante_id">
                 <button type="submit" id="reservarButton">Reservar Casillero</button>
                 <button type="button" id="cerrarButton" onclick="cerrarVentanaEmergente()">Cerrar</button>
             </form>
         </div>
     </div>
 
-    <!-- Imagen de mapa (si se desea mostrar) -->
-    <div class="gift">
-        <img src="../Imagenes/gitmapa.gif" alt="planos" class="mapa1">
-    </div>
-
-    <footer>
-        <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica (CENIGRAF) - Regional Distrito Capital.</p>
-        <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
-        <p>Atención telefónica: Lunes a viernes 7:00 a.m. a 7:00 p.m. - Sábados 8:00 a.m. a 1:00 p.m.</p>
-        <p>Línea de atención al ciudadano: Bogotá +(57) 601 7366060 - Línea gratuita: 018000 910270</p>
-        <p>Contacto: <a href="mailto:servicioalciudadano@sena.edu.co">servicioalciudadano@sena.edu.co</a></p>
-
-        <div class="social-icons">
-            <a href="https://www.facebook.com/SENADistritoCapital/" target="_blank">
-                <img src="../Imagenes/face_logo.png" alt="Facebook">
-            </a>
-            <a href="https://x.com/SENAComunica" target="_blank">
-                <img src="../Imagenes/tw_logo.png" alt="Twitter">
-            </a>
-            <a href="https://www.instagram.com/senacomunica/" target="_blank">
-                <img src="../Imagenes/insta_logo.png" alt="Instagram">
-            </a>
-        </div>
-        <p><a href="../Contactenos/privacidad.html">Aviso de privacidad</a></p>
-    </footer>
-
-    <!-- Script JavaScript para la interacción de la página -->
-<script>
-    // Función para obtener casilleros ocupados desde el backend
-    async function obtenerCasillerosOcupados() {
+    <script>
+       
+    document.addEventListener('DOMContentLoaded', async () => {
         try {
-            const respuesta = await fetch('obtener_casilleros.php'); // Archivo PHP que consulta la BD
-            const datos = await respuesta.json();
-            return datos.ocupados || []; // Devolver lista vacía si hay un error
-        } catch (error) {
-            console.error('Error obteniendo casilleros ocupados:', error);
-            return [];
-        }
-    }
+            const response = await fetch('../login/obtener_usuario.php'); // Ajusta la ruta según tu estructura de carpetas
+            const data = await response.json();
 
-    // Manejador de eventos para los botones de los bloques
-    document.querySelectorAll('.btn.bloque').forEach(button => {
-        button.addEventListener('click', async function () {
-            const bloque = this.getAttribute('data-bloque');
-            const cuadricula = document.getElementById('cuadricula');
-            cuadricula.innerHTML = ''; // Limpiar la cuadrícula
-
-            let numeros = [];
-            if (bloque === 'A') {
-                numeros = Array.from({ length: 120 }, (_, i) => i + 1);
-            } else if (bloque === 'B') {
-                numeros = Array.from({ length: 149 }, (_, i) => i + 121);
-            } else if (bloque === 'C') {
-                numeros = [...Array.from({ length: 15 }, (_, i) => i + 270), 
-                        ...Array.from({ length: 7 }, (_, i) => i + 304),
-                        ...Array.from({ length: 11 }, (_, i) => i + 315),
-                        ...Array.from({ length: 11 }, (_, i) => i + 330)];
-            } else if (bloque === 'D') {
-                numeros = [...Array.from({ length: 15 }, (_, i) => i + 285),
-                        ...Array.from({ length: 75 }, (_, i) => i + 360)];
-            } else if (bloque === 'E') {
-                numeros = Array.from({ length: 41 }, (_, i) => i + 435);
+            if (data.id_usuario) {
+                document.getElementById('estudianteIdInput').value = data.id_usuario;
             }
-
-            const ocupados = await obtenerCasillerosOcupados(); // Obtener los ocupados de la BD
-
-            numeros.forEach(num => {
-                const celda = document.createElement('div');
-                celda.classList.add('celda');
-                celda.textContent = num;
-
-                if (ocupados.includes(num)) {
-                    celda.classList.add('ocupado'); // Clase CSS para casilleros ocupados
-                } else {
-                    celda.addEventListener('click', function () {
-                        mostrarVentanaEmergente(num);
-                    });
-                }
-
-                cuadricula.appendChild(celda);
-            });
-
-            cuadricula.classList.toggle('visible');
-        });
+        } catch (error) {
+            console.error('Error obteniendo el usuario:', error);
+        }
     });
 
-    function mostrarVentanaEmergente(numCasillero) {
-        const ventana = document.getElementById('ventanaEmergente');
-        document.getElementById('numeroCasillero').textContent = numCasillero;
-        document.getElementById('casilleroIdInput').value = numCasillero;
-        ventana.style.display = 'flex';
-    }
 
-    function cerrarVentanaEmergente() {
-        document.getElementById('ventanaEmergente').style.display = 'none';
-    }
-</script>
+        async function obtenerCasillerosOcupados() {
+            try {
+                const respuesta = await fetch('obtener_casilleros.php');
+                const datos = await respuesta.json();
+                return datos.ocupados || [];
+            } catch (error) {
+                console.error('Error obteniendo casilleros ocupados:', error);
+                return [];
+            }
+        }
+
+        document.querySelectorAll('.btn.bloque').forEach(button => {
+            button.addEventListener('click', async function () {
+                const bloque = this.getAttribute('data-bloque');
+                const cuadricula = document.getElementById('cuadricula');
+                cuadricula.innerHTML = '';
+
+                let numeros = [];
+                if (bloque === 'A') {
+                    numeros = Array.from({ length: 120 }, (_, i) => i + 1);
+                } else if (bloque === 'B') {
+                    numeros = Array.from({ length: 149 }, (_, i) => i + 121);
+                }
+
+                const ocupados = await obtenerCasillerosOcupados();
+
+                numeros.forEach(num => {
+                    const celda = document.createElement('div');
+                    celda.classList.add('celda');
+                    celda.textContent = num;
+
+                    if (ocupados.includes(num)) {
+                        celda.classList.add('ocupado');
+                    } else {
+                        celda.addEventListener('click', function () {
+                            mostrarVentanaEmergente(num);
+                        });
+                    }
+
+                    cuadricula.appendChild(celda);
+                });
+
+                cuadricula.classList.toggle('visible');
+            });
+        });
+
+        function mostrarVentanaEmergente(numCasillero) {
+            document.getElementById('numeroCasillero').textContent = numCasillero;
+            document.getElementById('casilleroIdInput').value = numCasillero;
+            document.getElementById('ventanaEmergente').style.display = 'flex';
+        }
+
+        function cerrarVentanaEmergente() {
+            document.getElementById('ventanaEmergente').style.display = 'none';
+        }
+
+        document.getElementById('formReservar').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const casilleroId = document.getElementById('casilleroIdInput').value;
+            const estudianteId = document.getElementById('estudianteIdInput').value;
+
+            try {
+                const respuesta = await fetch('reservar_casillero.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ casillero_id: casilleroId, estudiante_id: estudianteId })
+                });
+
+                const resultado = await respuesta.json();
+
+                if (resultado.success) {
+                    alert('Reserva realizada con éxito');
+                    cerrarVentanaEmergente();
+                    location.reload(); // Recargar la página para reflejar los cambios
+                } else {
+                    alert(resultado.error || 'Error al reservar casillero');
+                }
+            } catch (error) {
+                console.error('Error en la reserva:', error);
+                alert('Error al conectar con el servidor');
+            }
+        });
+    </script>
+
 </body>
 
 </html>

@@ -6,6 +6,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST["email"]);
     $password = trim($_POST["contraseña"]);
 
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('Correo electrónico no válido'); window.history.back();</script>";
+        exit();
+    }
+
     try {
         // Consultar en la tabla administradores
         $stmt = $conn->prepare("SELECT id, nombre, contrasena FROM administradores WHERE email = :email");
@@ -41,10 +46,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
 
+        // Si no se encontró en ninguna tabla
         echo "<script>alert('Credenciales incorrectas'); window.history.back();</script>";
+        exit();
 
     } catch (PDOException $e) {
-        echo "<script>alert('Error en la conexión: " . $e->getMessage() . "');</script>";
+        echo "<script>alert('Error en la conexión: " . addslashes($e->getMessage()) . "');</script>";
     }
 }
 ?>
