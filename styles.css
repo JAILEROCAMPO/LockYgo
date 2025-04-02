@@ -301,34 +301,7 @@ footer a:hover {
 
 .login-container a:hover {
     text-decoration: underline;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Estilos generales */
+}/* Estilos generales */
 .body_register {
     font-family: 'Poppins', sans-serif;
     background-color: #1e1e1e;  /* Fondo oscuro */
@@ -437,14 +410,6 @@ footer a:hover {
     }
 }
 
-
-
-
-
-
-
-
-
 /* Pagina Bienvenida*/
 
 .tittle-welcome h2 {
@@ -547,17 +512,10 @@ button:hover {
     opacity: 0.9;
 }
 
-
-
-
-
-
 /*pagina de privacidad*/
 .container-p{
     text-align: center;
 }
-
-
 
 
 /*estilos perfil*/
