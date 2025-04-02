@@ -11,6 +11,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telefono = $_POST["telefono"];
     $email = $_POST["email"];
     $contrasena = password_hash($_POST["contraseña"], PASSWORD_DEFAULT);
+    
+    // Validar que el correo sea del dominio @soy.sena.edu.co
+    if (!preg_match("/^[a-zA-Z0-9._%+-]+@soy\.sena\.edu\.co$/", $email)) {
+        die("<script>alert('Correo no permitido. Use un correo @soy.sena.edu.co'); window.history.back();</script>");
+    }
 
     try{
         $sql = "INSERT INTO estudiantes(nombre,apellidos,celular,identificacion,ficha,email,jornada,programa_formacion,contrasena)VALUES(:nombre,:apellidos,:celular,:identificacion,:ficha,:email,:jornada,:programa_formacion,:contrasena)";
