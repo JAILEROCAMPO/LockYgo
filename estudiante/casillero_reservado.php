@@ -9,18 +9,24 @@ if (!isset($_SESSION['id_usuario'])) {
 
 $estudiante_id = $_SESSION['id_usuario'];
 
-// Obtener la reserva activa del estudiante con validación de estado del casillero
-$query = "SELECT r.id AS reserva_id, c.id AS casillero_id, c.numero 
+// Obtener la reserva activa del estudiante y validar estado del casillero
+$query = "SELECT r.id AS reserva_id, c.id AS casillero_id, c.numero, c.estado 
           FROM reservas r 
           JOIN casilleros c ON r.casillero_id = c.id 
-          WHERE r.estudiante_id = ? AND r.estado = 'Activa' AND c.estado = 'ocupado'";
+          WHERE r.estudiante_id = ? AND r.estado = 'Activa'";
 
 $stmt = $conn->prepare($query);
 $stmt->execute([$estudiante_id]);
 $reserva = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$reserva) {
-    echo "<p>No tienes ningún casillero reservado o el casillero está marcado como libre.</p>";
+    echo "<p>No tienes ningún casillero reservado.</p>";
+    exit();
+}
+
+// Verificar si el casillero está efectivamente "ocupado"
+if ($reserva['estado'] !== 'ocupado') {
+    echo "<p>Error: Tu reserva está activa, pero el casillero figura como {$reserva['estado']}.</p>";
     exit();
 }
 
@@ -28,6 +34,16 @@ if (!$reserva) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['liberar'])) {
     $conn->beginTransaction();
     try {
+        // Verificar si la reserva sigue activa antes de liberarla
+        $query_check_reserva = "SELECT id FROM reservas WHERE id = ? AND estado = 'Activa'";
+        $stmt = $conn->prepare($query_check_reserva);
+        $stmt->execute([$reserva['reserva_id']]);
+        
+        if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+            throw new Exception("No se encontró una reserva activa para liberar.");
+        }
+
+        // Actualizar reserva y casillero
         $query = "UPDATE reservas SET estado = 'Finalizada', fecha_liberacion = NOW() WHERE id = ?";
         $stmt = $conn->prepare($query);
         $stmt->execute([$reserva['reserva_id']]);
@@ -47,15 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['liberar'])) {
 
 // Reportar daño
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reportar'])) {
-    $descripcion = $_POST['descripcion'];
-    
+    $descripcion = trim($_POST['descripcion']);
+
     if (!empty($descripcion)) {
         $conn->beginTransaction();
         try {
+            // Insertar el reporte de daño
             $query = "INSERT INTO reportes_danos (estudiante_id, casillero_id, descripcion) VALUES (?, ?, ?)";
             $stmt = $conn->prepare($query);
             $stmt->execute([$estudiante_id, $reserva['casillero_id'], $descripcion]);
 
+            // Actualizar el estado del casillero a 'dañado'
             $query = "UPDATE casilleros SET estado = 'dañado' WHERE id = ?";
             $stmt = $conn->prepare($query);
             $stmt->execute([$reserva['casillero_id']]);
