@@ -2,58 +2,56 @@
 session_start();
 header('Content-Type: application/json');
 
+// Incluir archivo de conexión
 include "../conexion/dbpdo.php";
 
 try {
+    // Verificar método de solicitud
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         echo json_encode(['error' => 'Método no permitido']);
         exit();
     }
 
+    // Verificar que los parámetros requeridos existan
     if (!isset($_POST['casillero_id']) || !isset($_SESSION['id_usuario'])) {
         echo json_encode(['error' => 'Faltan parámetros']);
         exit();
     }
 
-    $casillero_id = $_POST['casillero_id'];
-    $estudiante_id = $_SESSION['id_usuario'];
+    $casillero_id = intval($_POST['casillero_id']);
+    $estudiante_id = intval($_SESSION['id_usuario']);
 
+    // Iniciar transacción
     $conn->beginTransaction();
 
-    // Verificar si el estudiante ya tiene una reserva activa
-    $query_check_reserva = "SELECT id FROM reservas WHERE estudiante_id = ? AND estado = 'Activa'";
-    $stmt = $conn->prepare($query_check_reserva);
+    // 1️⃣ Verificar si el estudiante ya tiene una reserva activa
+    $stmt = $conn->prepare("SELECT id FROM reservas WHERE estudiante_id = ? AND estado = 'Activa'");
     $stmt->execute([$estudiante_id]);
-    $reserva_existente = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($reserva_existente) {
+    if ($stmt->fetch()) {
         $conn->rollBack();
         echo json_encode(['error' => 'Ya tienes una reserva activa']);
         exit();
     }
 
-    // Verificar si el casillero está disponible
-    $query_check_casillero = "SELECT estado FROM casilleros WHERE id = ? AND estado = 'libre'";
-    $stmt = $conn->prepare($query_check_casillero);
+    // 2️⃣ Verificar si el casillero está disponible
+    $stmt = $conn->prepare("SELECT id FROM casilleros WHERE id = ? AND estado = 'libre'");
     $stmt->execute([$casillero_id]);
-    $casillero = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$casillero) {
+    if (!$stmt->fetch()) {
         $conn->rollBack();
         echo json_encode(['error' => 'El casillero no está disponible']);
         exit();
     }
 
-    // Insertar la nueva reserva
-    $query_reserva = "INSERT INTO reservas (estudiante_id, casillero_id, estado) VALUES (?, ?, 'Activa')";
-    $stmt = $conn->prepare($query_reserva);
+    // 3️⃣ Insertar la nueva reserva
+    $stmt = $conn->prepare("INSERT INTO reservas (estudiante_id, casillero_id, estado) VALUES (?, ?, 'Activa')");
     $stmt->execute([$estudiante_id, $casillero_id]);
+    $reserva_id = $conn->lastInsertId();
 
-    // Actualizar el estado del casillero a 'ocupado'
-    $query_update_casillero = "UPDATE casilleros SET estado = 'ocupado' WHERE id = ?";
-    $stmt = $conn->prepare($query_update_casillero);
-    $stmt->execute([$casillero_id]);
+    // 4️⃣ Actualizar el estado del casillero a 'ocupado' y asignar la reserva
+    $stmt = $conn->prepare("UPDATE casilleros SET estado = 'ocupado', ultima_reserva_id = ? WHERE id = ?");
+    $stmt->execute([$reserva_id, $casillero_id]);
 
+    // Confirmar transacción
     $conn->commit();
 
     echo json_encode(['success' => 'Casillero reservado con éxito']);
