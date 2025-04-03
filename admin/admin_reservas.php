@@ -1,8 +1,6 @@
+
 <?php
 include '../conexion/dbpdo.php';
-?>
-<?php
-include '../conexion/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     // Liberar casillero
