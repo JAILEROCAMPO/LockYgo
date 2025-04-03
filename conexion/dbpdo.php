@@ -3,7 +3,7 @@
 $servername = "localhost"; #servidor 
 $username ="root"; #usuario
 $password =""; #contraseña
-$database ="lockygo1"; #nombre base de datos 
+$database ="lockygo3"; #nombre base de datos 
 #usamos try para manejar los errores sin que la pagina se detenga
 try{ 
     #conectamos a la bd usando PDO
