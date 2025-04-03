@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "../conexion/dbpdo.php";
+include "../conexion/dbpdo.php"; // Asegúrate de que este archivo tenga la conexión correcta a `lockygo3`
 
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: ../login/inicioSesion_usuario.html");
@@ -9,7 +9,17 @@ if (!isset($_SESSION['id_usuario'])) {
 
 $estudiante_id = $_SESSION['id_usuario'];
 
-// Obtener la reserva activa del estudiante y validar estado del casillero
+// Verificar si el estudiante existe en la base de datos
+$query_check_estudiante = "SELECT id FROM estudiantes WHERE id = ?";
+$stmt = $conn->prepare($query_check_estudiante);
+$stmt->execute([$estudiante_id]);
+
+if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+    echo "<p>Error: El usuario no está registrado en el sistema.</p>";
+    exit();
+}
+
+// Obtener la reserva activa del estudiante
 $query = "SELECT r.id AS reserva_id, c.id AS casillero_id, c.numero, c.estado 
           FROM reservas r 
           JOIN casilleros c ON r.casillero_id = c.id 
@@ -24,13 +34,13 @@ if (!$reserva) {
     exit();
 }
 
-// Verificar si el casillero está efectivamente "ocupado"
-if ($reserva['estado'] !== 'ocupado') {
-    echo "<p>Error: Tu reserva está activa, pero el casillero figura como {$reserva['estado']}.</p>";
+// Validar estado del casillero
+if (!in_array($reserva['estado'], ['ocupado', 'dañado'])) {
+    echo "<p>Error: Tu reserva está activa, pero el casillero figura como '{$reserva['estado']}'.</p>";
     exit();
 }
 
-// Liberar casillero
+// **Liberar casillero**
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['liberar'])) {
     $conn->beginTransaction();
     try {
@@ -53,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['liberar'])) {
         $stmt->execute([$reserva['casillero_id']]);
 
         $conn->commit();
-        header("Location: index.php");
+        header("Location: estudiante/index");
         exit();
     } catch (Exception $e) {
         $conn->rollBack();
@@ -61,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['liberar'])) {
     }
 }
 
-// Reportar daño
+// **Reportar daño**
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reportar'])) {
     $descripcion = trim($_POST['descripcion']);
 
@@ -73,8 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reportar'])) {
             $stmt = $conn->prepare($query);
             $stmt->execute([$estudiante_id, $reserva['casillero_id'], $descripcion]);
 
-            // Actualizar el estado del casillero a 'dañado'
-            $query = "UPDATE casilleros SET estado = 'dañado' WHERE id = ?";
+            // Si el casillero está en estado 'ocupado', cambiarlo a 'dañado'
+            $query = "UPDATE casilleros SET estado = 'dañado' WHERE id = ? AND estado = 'ocupado'";
             $stmt = $conn->prepare($query);
             $stmt->execute([$reserva['casillero_id']]);
 

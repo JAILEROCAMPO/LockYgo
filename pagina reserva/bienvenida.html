@@ -53,20 +53,21 @@
     </div>
 
     <script>
-       
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const response = await fetch('../login/obtener_usuario.php'); // Ajusta la ruta según tu estructura de carpetas
-            const data = await response.json();
+        let estudianteId = null;
 
-            if (data.id_usuario) {
-                document.getElementById('estudianteIdInput').value = data.id_usuario;
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('../login/obtener_usuario.php'); 
+                const data = await response.json();
+
+                if (data.id_usuario) {
+                    estudianteId = data.id_usuario;
+                    document.getElementById('estudianteIdInput').value = estudianteId;
+                }
+            } catch (error) {
+                console.error('Error obteniendo el usuario:', error);
             }
-        } catch (error) {
-            console.error('Error obteniendo el usuario:', error);
-        }
-    });
-
+        });
 
         async function obtenerCasillerosOcupados() {
             try {
@@ -87,27 +88,20 @@
 
                 let numeros = [];
 
-                // Asignamos los rangos correspondientes a cada bloque
-                if (bloque === 'A') {
-                    numeros = Array.from({ length: 120 }, (_, i) => i + 1); // De 1 a 120
-                } else if (bloque === 'B') {
-                    numeros = Array.from({ length: 149 }, (_, i) => i + 121); // 121 a 269
-                } else if (bloque === 'C') {
-                    numeros = [
-                        ...Array.from({ length: 15 }, (_, i) => i + 270), // de 270 a 284
-                        ...Array.from({ length: 7 }, (_, i) => i + 304), // de 304 a 310
-                        ...Array.from({ length: 11 }, (_, i) => i + 315), // 315 a 325
-                        ...Array.from({ length: 11 }, (_, i) => i + 330), // 330 a 340
-                    ];
-                } else if (bloque === 'D') {
-                    numeros = [
-                        ...Array.from({ length: 15 }, (_, i) => i + 285), // 285 a 299
-                        ...Array.from({ length: 75 }, (_, i) => i + 360), // 360 a 434
-                    ];
-                } else if (bloque === 'E') {
-                    numeros = Array.from({ length: 41 }, (_, i) => i + 435); // de 435 a 475
+                switch (bloque) {
+                    case 'A': numeros = [...Array(120).keys()].map(i => i + 1); break;
+                    case 'B': numeros = [...Array(149).keys()].map(i => i + 121); break;
+                    case 'C': numeros = [...Array(15).keys()].map(i => i + 270)
+                                    .concat([...Array(7).keys()].map(i => i + 304))
+                                    .concat([...Array(11).keys()].map(i => i + 315))
+                                    .concat([...Array(11).keys()].map(i => i + 330));
+                                    break;
+                    case 'D': numeros = [...Array(15).keys()].map(i => i + 285)
+                                    .concat([...Array(75).keys()].map(i => i + 360));
+                                    break;
+                    case 'E': numeros = [...Array(41).keys()].map(i => i + 435); break;
                 }
- 
+
                 const ocupados = await obtenerCasillerosOcupados();
 
                 numeros.forEach(num => {
@@ -144,13 +138,16 @@
             event.preventDefault();
 
             const casilleroId = document.getElementById('casilleroIdInput').value;
-            const estudianteId = document.getElementById('estudianteIdInput').value;
+            if (!estudianteId) {
+                alert('Error: No se ha identificado al usuario.');
+                return;
+            }
 
             try {
                 const respuesta = await fetch('reservar_casillero.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ casillero_id: casilleroId, estudiante_id: estudianteId })
+                    body: new URLSearchParams({ casillero_id: casilleroId })
                 });
 
                 const resultado = await respuesta.json();
@@ -158,7 +155,7 @@
                 if (resultado.success) {
                     alert('Reserva realizada con éxito');
                     cerrarVentanaEmergente();
-                    location.reload(); // Recargar la página para reflejar los cambios
+                    location.reload(); 
                 } else {
                     alert(resultado.error || 'Error al reservar casillero');
                 }
@@ -170,5 +167,4 @@
     </script>
 
 </body>
-
 </html>
