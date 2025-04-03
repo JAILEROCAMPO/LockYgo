@@ -86,10 +86,26 @@
                 cuadricula.innerHTML = '';
 
                 let numeros = [];
+
+                // Asignamos los rangos correspondientes a cada bloque
                 if (bloque === 'A') {
-                    numeros = Array.from({ length: 120 }, (_, i) => i + 1);
+                    numeros = Array.from({ length: 120 }, (_, i) => i + 1); // De 1 a 120
                 } else if (bloque === 'B') {
-                    numeros = Array.from({ length: 149 }, (_, i) => i + 121);
+                    numeros = Array.from({ length: 149 }, (_, i) => i + 121); // 121 a 269
+                } else if (bloque === 'C') {
+                    numeros = [
+                        ...Array.from({ length: 15 }, (_, i) => i + 270), // de 270 a 284
+                        ...Array.from({ length: 7 }, (_, i) => i + 304), // de 304 a 310
+                        ...Array.from({ length: 11 }, (_, i) => i + 315), // 315 a 325
+                        ...Array.from({ length: 11 }, (_, i) => i + 330), // 330 a 340
+                    ];
+                } else if (bloque === 'D') {
+                    numeros = [
+                        ...Array.from({ length: 15 }, (_, i) => i + 285), // 285 a 299
+                        ...Array.from({ length: 75 }, (_, i) => i + 360), // 360 a 434
+                    ];
+                } else if (bloque === 'E') {
+                    numeros = Array.from({ length: 41 }, (_, i) => i + 435); // de 435 a 475
                 }
  
                 const ocupados = await obtenerCasillerosOcupados();

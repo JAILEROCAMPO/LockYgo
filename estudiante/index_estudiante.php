@@ -46,7 +46,7 @@ echo "ID del usuario autenticado: " . $_SESSION["id_usuario"];
     <h1>Bienvenido, <?php echo htmlspecialchars(ucfirst($nombreUsuario)); ?>!</h1>
         <h1>Reserva tu casillero fácilmente</h1>
         <p>Accede a un espacio seguro para guardar tus pertenencias en el SENA.</p>
-        <a href="../pagina reserva/bienvenida.php" class="btn">Empezar</a>
+        <a href="../pagina reserva/bienvenida.html" class="btn">Empezar</a>
     </header>
     <section class="features">
         <div class="feature">
