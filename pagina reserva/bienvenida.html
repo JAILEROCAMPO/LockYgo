@@ -53,22 +53,56 @@
         </div>
     </div>
 
+    <footer>
+        <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica (CENIGRAF) - Regional Distrito Capital.</p>
+        <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
+        <p>Atención telefónica: Lunes a viernes 7:00 a.m. a 7:00 p.m. - Sábados 8:00 a.m. a 1:00 p.m.</p>
+        <p>Línea de atención al ciudadano: Bogotá +(57) 601 7366060 - Línea gratuita: 018000 910270</p>
+        <p>Contacto: <a href="mailto:servicioalciudadano@sena.edu.co">servicioalciudadano@sena.edu.co</a></p>
+
+        <div class="social-icons">
+            <a href="https://www.facebook.com/SENADistritoCapital/" target="_blank">
+                <img src="../Imagenes/face_logo.png" alt="Facebook">
+            </a>
+            <a href="https://x.com/SENAComunica" target="_blank">
+                <img src="../Imagenes/tw_logo.png" alt="Twitter">
+            </a>
+            <a href="https://www.instagram.com/senacomunica/" target="_blank">
+                <img src="../Imagenes/insta_logo.png" alt="Instagram">
+            </a>
+        </div>
+
+        <p><a href="Contactenos/privacidad.html">Aviso de privacidad</a></p>
+    </footer>
+
     <script>
-        let estudianteId = null;
+       let estudianteId = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                const response = await fetch('../login/obtener_usuario.php'); 
-                const data = await response.json();
+                // Verificar si ya tiene reserva activa
+                const res = await fetch('verificar_reserva_activa.php');
+                const data = await res.json();
 
-                if (data.id_usuario) {
-                    estudianteId = data.id_usuario;
+                if (data.activa) {
+                    window.location.href = '../estudiante/casillero_reservado.php';
+                    return;
+                }
+
+                // Obtener ID del usuario
+                const response = await fetch('../login/obtener_usuario.php'); 
+                const dataUsuario = await response.json();
+
+                if (dataUsuario.id_usuario) {
+                    estudianteId = dataUsuario.id_usuario;
                     document.getElementById('estudianteIdInput').value = estudianteId;
                 }
+
             } catch (error) {
-                console.error('Error obteniendo el usuario:', error);
+                console.error('Error al verificar reserva activa:', error);
             }
         });
+
 
         async function obtenerCasillerosOcupados() {
             try {

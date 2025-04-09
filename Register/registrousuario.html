@@ -32,7 +32,6 @@
         <div class="register-container">
             <h2>Registro de Usuario</h2>
             
-            
             <form id="registroForm" action="registro.php" method="POST" class="register-form">
                 <input type="hidden" name="tipo_usuario" value="estudiante">
                 
@@ -92,43 +91,60 @@
             
                 <button type="submit" class="register-btn">Registrarse</button>
             </form>
-            <p id="mensajeError" class="mensaje_error"></p>
-            
+
+            <p id="mensajeError" class="mensaje_error" style="display: none;"></p>
 
         </div>
     </div>
+
     <script>
-        document.getElementById("registroForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Evita el envío normal del formulario
-        
-            var formData = new FormData(this);
-        
-            fetch("registro.php", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    alert(data.message);
-                    window.location.href = "../login/inicioSesion_usuario.html";
-                } else {
-                    document.getElementById("mensajeError").textContent = data.message;
-                    document.getElementById("mensajeError").style.display = "block";
-                }
-            })
-            .catch(error => console.error("Error:", error));
+    document.getElementById("registroForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const form = this;
+        const formData = new FormData(form);
+
+        const pass1 = formData.get("contraseña");
+        const pass2 = formData.get("confirmar_contraseña");
+
+        const mensaje = document.getElementById("mensajeError");
+        mensaje.style.display = "none";
+
+        if (pass1 !== pass2) {
+            mensaje.textContent = "Las contraseñas no coinciden.";
+            mensaje.style.display = "block";
+            return;
+        }
+
+        fetch("registro.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert(data.message);
+                window.location.href = "../login/inicioSesion_usuario.html";
+            } else {
+                mensaje.textContent = data.message;
+                mensaje.style.display = "block";
+            }
+        })
+        .catch(error => {
+            mensaje.textContent = "Error de servidor. Inténtalo más tarde.";
+            mensaje.style.display = "block";
+            console.error("Error:", error);
         });
-        </script>
+    });
+    </script>
 
     <!-- Pie de página -->
     <footer>
-        <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica (CENIGRAF) - Regional Distrito Capital.</p>
-        <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
-        <p>Atención telefónica: Lunes a viernes 7:00 a.m. a 7:00 p.m. - Sábados 8:00 a.m. a 1:00 p.m.</p>
-        <p>Línea de atención al ciudadano: Bogotá +(57) 601 7366060 - Línea gratuita: 018000 910270</p>
+        <p>&copy; Servicio Nacional de Aprendizaje SENA - CENIGRAF - Regional Distrito Capital.</p>
+        <p>Dirección: Cra. 32 #15 - 80 – Tel: 546 1500 o 596 0100 Ext.: 15 463</p>
+        <p>Horario: Lunes a viernes 7am a 7pm - Sábados 8am a 1pm</p>
+        <p>Línea atención: Bogotá +(57) 601 7366060 - Gratuita: 018000 910270</p>
         <p>Contacto: <a href="mailto:servicioalciudadano@sena.edu.co">servicioalciudadano@sena.edu.co</a></p>
-
         <div class="social-icons">
             <a href="https://www.facebook.com/SENADistritoCapital/" target="_blank">
                 <img src="../Imagenes/face_logo.png" alt="Facebook">
@@ -140,9 +156,7 @@
                 <img src="../Imagenes/insta_logo.png" alt="Instagram">
             </a>
         </div>
-
         <p><a href="../Contactenos/privacidad.html">Aviso de privacidad</a></p>
     </footer>
-
 </body>
 </html>

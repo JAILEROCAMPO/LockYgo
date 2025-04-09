@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include "../conexion/dbpdo.php"; 
+include "../conexion/dbpdo.php"; // Asegúrate que dentro define $conn como instancia de PDO
 
 header("Content-Type: application/json");
 
@@ -39,17 +39,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    // Validar que las contraseñas coincidan
     if ($contrasena !== $confirmar_contrasena) {
         $response["message"] = "Las contraseñas no coinciden.";
         echo json_encode($response);
         exit();
     }
 
-    // Hash de la contraseña
-    $contrasena_hashed = password_hash($contrasena, PASSWORD_DEFAULT);
+    // Validar que el correo sea institucional
+    if (!preg_match("/^[a-zA-Z0-9._%+-]+@soy\.sena\.edu\.co$/", $email)) {
+        $response["message"] = "Correo no permitido. Use un correo @soy.sena.edu.co";
+        echo json_encode($response);
+        exit();
+    }
 
     try {
+        // Verificar si ya existe ese correo
+        $verificar = $conn->prepare("SELECT id FROM estudiantes WHERE email = :email");
+        $verificar->bindParam(":email", $email, PDO::PARAM_STR);
+        $verificar->execute();
+
+        if ($verificar->rowCount() > 0) {
+            $response["message"] = "Este correo ya está registrado.";
+            echo json_encode($response);
+            exit();
+        }
+
+        // Hash de la contraseña
+        $contrasena_hashed = password_hash($contrasena, PASSWORD_DEFAULT);
+
         $sql = "INSERT INTO estudiantes(nombre, apellidos, celular, identificacion, ficha, email, jornada, programa_formacion, contrasena) 
                 VALUES(:nombre, :apellidos, :celular, :identificacion, :ficha, :email, :jornada, :programa_formacion, :contrasena)";
 
@@ -71,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $response["message"] = "Error al registrar estudiante.";
         }
-        
+
     } catch (PDOException $error) {
         if ($error->getCode() == 23000) {
             $response["message"] = "El correo o la identificación ya están registrados.";

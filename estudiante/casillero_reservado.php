@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 include "../conexion/dbpdo.php"; // Asegúrate de que este archivo tenga la conexión correcta a `lockygo3`
@@ -89,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reportar'])) {
             $stmt->execute([$reserva['casillero_id']]);
 
             $conn->commit();
-            echo "<p>El daño ha sido reportado. Gracias.</p>";
         } catch (Exception $e) {
             $conn->rollBack();
             echo "<p>Error al reportar el daño: " . $e->getMessage() . "</p>";
@@ -99,26 +99,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reportar'])) {
     }
 }
 ?>
+<?php
 
+
+
+?>
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casillero Reservado</title>
-</head>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lock&Go - Inicio</title>
+        <link rel="stylesheet" href="../styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/png" href="../../Imagenes/image-removebg-preview.png">
+    
+    </head>
 <body>
-    <h2>Tu Casillero Reservado</h2>
-    <p>Número de casillero: <strong><?php echo htmlspecialchars($reserva['numero']); ?></strong></p>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../Imagenes/image-removebg-preview.png" alt="Lock&Go">
+            <span class="logo-text">Lock&Go</span>
+        </div>
+        <ul class="menu">
+            <li><a href="index_estudiante.php">Inicio</a></li>
+            <li><a href="../Pagina Reserva/bienvenida.html">Casilleros</a></li>
+            <li><a href="../contactenos/contacto.html">Contacto</a></li>
+        </ul>
+        <div class="user-icon"> 
+            <a href="editar_perfil.php"><img src="../Imagenes/perfil.png" alt="Perfil"></a>
+            <a href="../login/logout.php" class="cerrar"><img src="../Imagenes/cerrar.png" alt="Cerrar Sesion"></a>
+        </div>
 
+    </nav>
+    <h2>Tu Casillero Reservado</h2>
+    <div class="casillero-box">
+        <span class="numero-casillero"><?php echo htmlspecialchars($reserva['numero']); ?></span>
+       
+    </div>
     <form method="POST">
         <button type="submit" name="liberar">Liberar Casillero</button>
     </form>
+    <!-- Botón que abre el modal -->
+    <button onclick="abrirModal()">Reportar Daño</button>
 
-    <h3>Reportar Daño</h3>
-    <form method="POST">
-        <textarea name="descripcion" placeholder="Describe el daño..." required></textarea><br>
-        <button type="submit" name="reportar">Reportar</button>
-    </form>
+    <!-- Modal con FORMULARIO que sí envía los datos -->
+    <div id="modalReporte" class="modal">
+    <div class="modal-contenido">
+        <h3>Reportar Daño</h3>
+        <form method="POST">
+            <textarea name="descripcion" placeholder="Describe el daño..." required></textarea>
+            <input type="hidden" name="reportar" value="1"> <!-- Esto activa la lógica del PHP -->
+            <div class="botones-modal">
+                <button type="submit">Reportar</button>
+                <button type="button" onclick="cerrarModal()">Cerrar</button>
+            </div>
+        </form>
+    </div>
+    </div>
+
+
+</div>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>&copy; Servicio Nacional de Aprendizaje SENA - Centro para la Industria de la Comunicación Gráfica (CENIGRAF) - Regional Distrito Capital.</p>
+        <p>Dirección: Cra. 32 #15 - 80 – Teléfonos: 546 1500 o 596 0100 Ext.: 15 463</p>
+        <p>Atención telefónica: Lunes a viernes 7:00 a.m. a 7:00 p.m. - Sábados 8:00 a.m. a 1:00 p.m.</p>
+        <p>Línea de atención al ciudadano: Bogotá +(57) 601 7366060 - Línea gratuita: 018000 910270</p>
+        <p>Contacto: <a href="mailto:servicioalciudadano@sena.edu.co">servicioalciudadano@sena.edu.co</a></p>
+
+        <div class="social-icons">
+            <a href="https://www.facebook.com/SENADistritoCapital/" target="_blank">
+                <img src="../Imagenes/face_logo.png" alt="Facebook">
+            </a>
+            <a href="https://x.com/SENAComunica" target="_blank">
+                <img src="../Imagenes/tw_logo.png" alt="Twitter">
+            </a>
+            <a href="https://www.instagram.com/senacomunica/" target="_blank">
+                <img src="../Imagenes/insta_logo.png" alt="Instagram">
+            </a>
+        </div>
+
+        <p><a href="Contactenos/privacidad.html">Aviso de privacidad</a></p>
+    </footer>
+    <script>
+        function abrirModal() {
+            document.getElementById("modalReporte").style.display = "block";
+        }
+
+        function cerrarModal() {
+            document.getElementById("modalReporte").style.display = "none";
+        }
+        function enviarReporte() {
+            const descripcion = document.getElementById("descripcion").value.trim();
+             if (!descripcion) {
+                alert("Por favor describe el daño antes de enviar.");
+                return;
+            }
+            alert("Reporte enviado correctamente.");
+            cerrarModal();
+        }
+
+
+
+    </script>
+
 </body>
-</html>

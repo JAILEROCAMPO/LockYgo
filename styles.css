@@ -567,3 +567,77 @@ button:hover {
     }
     
 }
+.casillero-box{
+    width: 150px;
+    height: 150px;
+    background-color: #e66b00 !important;
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto; /* centrar */
+    border-radius: 10px;
+    transition: 0.3s;
+}
+.casillero-box:hover{
+    background-color: #e66b00;
+    border-color: #ffffff;
+}
+.numero-casillero {
+    color: white;
+    font-size: 50px;
+    font-weight: bold;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .modal-contenido {
+    background-color: #1f1f1f;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    color: white;
+    text-align: center;
+  }
+  
+  textarea {
+    width: 95%;
+    height: 90px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px;
+    resize: none;
+  }
+  
+  .botones-modal {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .botones-modal button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .botones-modal button:hover {
+    background-color: #0056b3;
+  }
+  
