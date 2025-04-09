@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['liberar'])) {
         $stmt->execute([$reserva['casillero_id']]);
 
         $conn->commit();
-        header("Location: estudiante/index");
+        header("Location: index_estudiante.php");
         exit();
     } catch (Exception $e) {
         $conn->rollBack();

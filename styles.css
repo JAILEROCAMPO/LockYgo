@@ -452,7 +452,7 @@ footer a:hover {
     border: 1px solid #e66b00;
 }
 .celda:hover{
-    background-color: ;
+    background-color:#e66b00 ;
     border-color: #ffffff;
 }
 .ocupado {
@@ -552,4 +552,18 @@ button:hover {
 
 .btn:hover {
     background: #e68900;
+}
+
+.mensaje_error{
+    #mensajeError {
+        display: block;
+        width: 100%;
+        max-width: 800px; /* Ajusta el ancho según tu necesidad */
+        text-align: center;
+        font-size: 18px;
+        margin: 10px auto;
+        white-space: normal; /* Permite que el texto se ajuste automáticamente */
+        word-wrap: break-word;
+    }
+    
 }

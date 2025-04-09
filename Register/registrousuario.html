@@ -33,9 +33,9 @@
             <h2>Registro de Usuario</h2>
             
             
-            <form action="registro.php" method="POST" class="register-form">
-                <input type="hidden" name="tipo_usuario" value="estudiante" class="">
-            
+            <form id="registroForm" action="registro.php" method="POST" class="register-form">
+                <input type="hidden" name="tipo_usuario" value="estudiante">
+                
                 <div class="register-input-group">
                     <label for="nombre">Nombre:</label>
                     <input type="text" id="nombre" name="nombre" required>
@@ -84,16 +84,42 @@
                     <label for="contraseña">Contraseña:</label>
                     <input type="password" id="contraseña" name="contraseña" required>
                 </div>
+            
                 <div class="register-input-group">
-                        <label for="contraseña">Confirmar contraseña:</label>
-                        <input type="password" id="contraseña" name="contraseña" required>
-                    </div>
+                    <label for="confirmar_contraseña">Confirmar contraseña:</label>
+                    <input type="password" id="confirmar_contraseña" name="confirmar_contraseña" required>
+                </div>
+            
                 <button type="submit" class="register-btn">Registrarse</button>
             </form>
+            <p id="mensajeError" class="mensaje_error"></p>
             
 
         </div>
     </div>
+    <script>
+        document.getElementById("registroForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evita el envío normal del formulario
+        
+            var formData = new FormData(this);
+        
+            fetch("registro.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert(data.message);
+                    window.location.href = "../login/inicioSesion_usuario.html";
+                } else {
+                    document.getElementById("mensajeError").textContent = data.message;
+                    document.getElementById("mensajeError").style.display = "block";
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+        </script>
 
     <!-- Pie de página -->
     <footer>

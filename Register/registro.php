@@ -1,41 +1,85 @@
 <?php
-include "../conexion/dbpdo.php"; // Asegúrate de que este archivo establece la conexión correctamente
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+include "../conexion/dbpdo.php"; 
+
+header("Content-Type: application/json");
+
+$response = ["status" => "error", "message" => ""];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $_POST["nombre"];
-    $apellido = $_POST["apellido"];
-    $identificacion = $_POST["identificacion"];
-    $ficha = $_POST["ficha"];
-    $programaf = $_POST["programa"];       
-    $jornada = $_POST["jornada"];
-    $telefono = $_POST["telefono"];
-    $email = $_POST["email"];
-    $contrasena = password_hash($_POST["contraseña"], PASSWORD_DEFAULT);
+    // Validación de datos
+    if (
+        empty($_POST["nombre"]) || empty($_POST["apellido"]) || empty($_POST["identificacion"]) || 
+        empty($_POST["ficha"]) || empty($_POST["programa"]) || empty($_POST["jornada"]) || 
+        empty($_POST["telefono"]) || empty($_POST["email"]) || empty($_POST["contraseña"]) || empty($_POST["confirmar_contraseña"])
+    ) {
+        $response["message"] = "Todos los campos son obligatorios.";
+        echo json_encode($response);
+        exit();
+    }
 
-    try{
-        $sql = "INSERT INTO estudiantes(nombre,apellidos,celular,identificacion,ficha,email,jornada,programa_formacion,contrasena)VALUES(:nombre,:apellidos,:celular,:identificacion,:ficha,:email,:jornada,:programa_formacion,:contrasena)";
+    // Recibir datos
+    $nombre = trim($_POST["nombre"]);
+    $apellido = trim($_POST["apellido"]);
+    $identificacion = trim($_POST["identificacion"]);
+    $ficha = trim($_POST["ficha"]);
+    $programaf = trim($_POST["programa"]);
+    $jornada = trim($_POST["jornada"]);
+    $telefono = trim($_POST["telefono"]);
+    $email = filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL);
+    $contrasena = $_POST["contraseña"];
+    $confirmar_contrasena = $_POST["confirmar_contraseña"];
+
+    if (!$email) {
+        $response["message"] = "Correo electrónico no válido.";
+        echo json_encode($response);
+        exit();
+    }
+
+    // Validar que las contraseñas coincidan
+    if ($contrasena !== $confirmar_contrasena) {
+        $response["message"] = "Las contraseñas no coinciden.";
+        echo json_encode($response);
+        exit();
+    }
+
+    // Hash de la contraseña
+    $contrasena_hashed = password_hash($contrasena, PASSWORD_DEFAULT);
+
+    try {
+        $sql = "INSERT INTO estudiantes(nombre, apellidos, celular, identificacion, ficha, email, jornada, programa_formacion, contrasena) 
+                VALUES(:nombre, :apellidos, :celular, :identificacion, :ficha, :email, :jornada, :programa_formacion, :contrasena)";
 
         $stmt = $conn->prepare($sql);
 
-        $stmt->bindParam(":nombre",$nombre,PDO::PARAM_STR);
-        $stmt->bindParam(":apellidos",$apellido,PDO::PARAM_STR);
-        $stmt->bindParam(":celular",$telefono,PDO::PARAM_STR);
-        $stmt->bindParam(":identificacion",$identificacion,PDO::PARAM_STR);
-        $stmt->bindParam(":ficha",$ficha,PDO::PARAM_STR);
-        $stmt->bindParam(":email",$email,PDO::PARAM_STR);
-        $stmt->bindParam(":jornada",$jornada,PDO::PARAM_STR);
-        $stmt->bindParam(":programa_formacion",$programaf,PDO::PARAM_STR);
-        $stmt->bindParam(":contrasena",$contrasena,PDO::PARAM_STR);
+        $stmt->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+        $stmt->bindParam(":apellidos", $apellido, PDO::PARAM_STR);
+        $stmt->bindParam(":celular", $telefono, PDO::PARAM_STR);
+        $stmt->bindParam(":identificacion", $identificacion, PDO::PARAM_STR);
+        $stmt->bindParam(":ficha", $ficha, PDO::PARAM_STR);
+        $stmt->bindParam(":email", $email, PDO::PARAM_STR);
+        $stmt->bindParam(":jornada", $jornada, PDO::PARAM_STR);
+        $stmt->bindParam(":programa_formacion", $programaf, PDO::PARAM_STR);
+        $stmt->bindParam(":contrasena", $contrasena_hashed, PDO::PARAM_STR);
 
-        if($stmt->execute()){
-            echo"Estudiante registrado exitosamente";
-        }else{
-            echo"error al registar Estudiante";
+        if ($stmt->execute()) {
+            $response["status"] = "success";
+            $response["message"] = "Estudiante registrado exitosamente. ¡Inicia sesión!";
+        } else {
+            $response["message"] = "Error al registrar estudiante.";
         }
         
-    }catch(PDOException $error){
-        echo"Registro fallido: ".$error->getMessage();
+    } catch (PDOException $error) {
+        if ($error->getCode() == 23000) {
+            $response["message"] = "El correo o la identificación ya están registrados.";
+        } else {
+            $response["message"] = "Registro fallido: " . $error->getMessage();
+        }
     }
-
 }
-?>
+
+echo json_encode($response);
+exit();
