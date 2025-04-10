@@ -47,6 +47,7 @@ $nombreUsuario = $_SESSION["nombre"];
                 <button class="btn bloque" onclick="location.href='../estudiante/tabla_estudiantes.php'">TABLA USUARIOS</button>
                 <button class="btn bloque" onclick="location.href='tabla_admin.php'">TABLA ADMINISTRADORES</button>
                 <button class="btn bloque" onclick="location.href='admin_reservas.php'">TABLA RESERVAS</button>
+                <button class="btn bloque" onclick="location.href='tabla_daños.php'">TABLA REPORTE DAÑOS</button>
             </button>
         </div>
         
