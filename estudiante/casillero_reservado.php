@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 include "../conexion/dbpdo.php"; // Asegúrate de que este archivo tenga la conexión correcta a `lockygo3`

@@ -31,9 +31,11 @@ $nombreUsuario = $_SESSION["nombre"];
             <span class="logo-text">Lock&Go</span>
         </div>
         <ul class="menu">
-            <li><a href="index_admin.php">Inicio</a></li>
+            <li><a href="../index.html">Inicio</a></li>
             <li><a href="tablas.php">Tablas</a></li>
             <li><a href="RegistrarA.php">Registrar</a></li>
+            <li><a href="admin_reservas.php">Casilleros reservados</a></li>
+
         </ul>     
         <div class="user-icon"> 
             <a href="../login/logout.php" class="cerrar"><img src="../Imagenes/cerrar.png" alt="Cerrar Sesión"></a>
@@ -44,8 +46,7 @@ $nombreUsuario = $_SESSION["nombre"];
         <div>
                 <button class="btn bloque" onclick="location.href='../estudiante/tabla_estudiantes.php'">TABLA USUARIOS</button>
                 <button class="btn bloque" onclick="location.href='tabla_admin.php'">TABLA ADMINISTRADORES</button>
-                <button class="btn bloque" onclick="location.href='casilleros.html'">TABLA CASILLEROS</button>
-                <button class="btn bloque" onclick="location.href='reservas.html'">TABLA RESERVAS</button>
+                <button class="btn bloque" onclick="location.href='admin_reservas.php'">TABLA RESERVAS</button>
             </button>
         </div>
         
