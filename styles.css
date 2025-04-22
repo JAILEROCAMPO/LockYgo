@@ -640,4 +640,25 @@ button:hover {
   .botones-modal button:hover {
     background-color: #0056b3;
   }
+  .reserva-casillero {
+    background-color: #f4f4f4;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+  
+  .reserva-casillero h3 {
+    color: #333;
+  }
+  
+  .limite-tiempo {
+    color: #444;
+  }
+  
+  .advertencia {
+    color: #b20000;
+    font-weight: bold;
+  }
   
